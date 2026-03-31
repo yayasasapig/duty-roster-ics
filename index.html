@@ -385,13 +385,12 @@
     function shiftLabel(shift) {
       const s = shift.toUpperCase();
       const map = {
-        'A5':  'A5 班',
-        'P5':  'P5 班',
-        'AN':  'AN 下午班',
-        'N*':  'N* Sleeping day',
+        'A5':  '返A',
+        'P5':  '返P',
+        'AN':  '返AN',
+        'N*':  'sleeping',
         'D*':  '主管更',
-        'D5':  'D5 Renal培訓',
-        'NDD': '放假 (NDD)',
+        'D5':  'Renal培訓',
       };
       return map[s] || shift;
     }
