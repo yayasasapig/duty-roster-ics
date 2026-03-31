@@ -199,7 +199,9 @@
     }
 
     .cell-off { background: #6B6B6B; }
+    .cell-a   { background: #007F3B; }
     .cell-a5  { background: #007F3B; }
+    .cell-p   { background: #005EB8; }
     .cell-p5  { background: #005EB8; }
     .cell-an  { background: #7B2D8B; }
     .cell-n   { background: #DA291C; }
@@ -539,9 +541,14 @@
         // 決定 cell-code class
         let codeClass = 'cell-off';
         if (!off) {
-          const firstChar = shift.charAt(0).toLowerCase();
-          if (['a','p','n','d'].includes(firstChar)) {
-            codeClass = 'cell-' + firstChar;
+          const upper = shift.toUpperCase();
+          if (upper === 'AN') {
+            codeClass = 'cell-an';
+          } else {
+            const firstChar = shift.charAt(0).toLowerCase();
+            if (['a','p','n','d'].includes(firstChar)) {
+              codeClass = 'cell-' + firstChar;
+            }
           }
         }
 
