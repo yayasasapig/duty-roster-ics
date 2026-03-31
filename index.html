@@ -220,12 +220,13 @@
         <div class="legend-grid">
           <div class="legend-item"><span class="legend-code code-a5">A5</span> 07:00–15:00</div>
           <div class="legend-item"><span class="legend-code code-p5">P5</span> 14:00–22:00</div>
-          <div class="legend-item"><span class="legend-code code-an">AN</span> 14:00–08:00 (+1日)</div>
-          <div class="legend-item"><span class="legend-code code-n">N*</span> 22:00–08:00 (+1日)</div>
+          <div class="legend-item"><span class="legend-code code-an">AN</span> 07:00–13:00 下午班</div>
+          <div class="legend-item"><span class="legend-code code-n">N*</span> 07:00–13:00 Sleeping day</div>
           <div class="legend-item"><span class="legend-code code-off">D*</span> 主管更 07:00–15:00</div>
           <div class="legend-item"><span class="legend-code code-off">NDD</span> Night Duty 22:00–08:00</div>
+          <div class="legend-item"><span class="legend-code code-off">MY1</span> 勞動節 5月1日 放假</div>
           <div class="legend-item" style="grid-column:1/-1">
-            <span class="legend-code code-off">WO / O / AL / 其他</span> 不產生行事曆事件
+            <span class="legend-code code-off">WO / O / AL / MY1 / 其他</span> 不產生行事曆事件
           </div>
         </div>
       </div>
@@ -239,13 +240,14 @@
     // 返回 { startHour, startMin, endHour, endMin, nextDay } 或 null (不用生成)
     function shiftToTimes(shift) {
       const s = shift.toUpperCase();
-      if (s === 'A5') return { sh: 7,  sm: 0, eh: 15, em: 0, nextDay: false };
-      if (s === 'P5') return { sh: 14, sm: 0, eh: 22, em: 0, nextDay: false };
-      if (s === 'AN') return { sh: 14, sm: 0, eh: 8,  em: 0, nextDay: true  };
-      if (s.startsWith('N'))  return { sh: 22, sm: 0, eh: 8,  em: 0, nextDay: true  };
-      if (s === 'D*') return { sh: 7,  sm: 0, eh: 15, em: 0, nextDay: false };
-      if (s === 'NDD')return { sh: 22, sm: 0, eh: 8,  em: 0, nextDay: true  };
-      // WO, O, AL, MY1, MY2, AP2, AP3, AP4, D5, SD 等不用生成
+      if (s === 'A5')  return { sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false };
+      if (s === 'P5')  return { sh: 14, sm: 0,  eh: 22, em: 0,  nextDay: false };
+      if (s === 'AN')  return { sh: 7,  sm: 0,  eh: 13, em: 0,  nextDay: false };  // 下午班 07:00–13:00
+      if (s === 'NDD') return { sh: 22, sm: 0,  eh: 8,  em: 0,  nextDay: true  };  // Night Duty 22:00–08:00
+      if (s.startsWith('N')) return { sh: 7, sm: 0, eh: 13, em: 0, nextDay: false }; // Sleeping day 07:00–13:00
+      if (s === 'D*')  return { sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false };
+      if (s === 'D5')  return { sh: 9,  sm: 0,  eh: 17, em: 48, nextDay: false }; // Renal培訓 09:00–17:48
+      // WO, O, AL, MY1, MY2, AP2, AP3, AP4, SD 等不用生成
       return null;
     }
 
@@ -254,10 +256,11 @@
       const map = {
         'A5':'A5 班 (07:00–15:00)',
         'P5':'P5 班 (14:00–22:00)',
-        'AN':'AN 班 (14:00–08:00+1)',
-        'N*':'N* 夜班 (22:00–08:00+1)',
+        'AN':'AN 班 (07:00–13:00) 下午班',
+        'N*':'N* Sleeping day (07:00–13:00)',
         'D*':'主管更 (07:00–15:00)',
-        'NDD':'Night Duty (22:00–08:00+1)',
+        'NDD':'Night Duty (22:00–08:00)',
+        'D5':'D5 Renal培訓 (09:00–17:48)',
       };
       return map[s] || shift;
     }
