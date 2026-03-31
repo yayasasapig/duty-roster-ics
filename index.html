@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>東區醫院 A5 病房更表下載</title>
+  <style>
+    :root {
+      --primary: #005EB8;
+      --primary-dark: #003087;
+      --bg: #F0F4F8;
+      --card-bg: #FFFFFF;
+      --text: #1A1A2E;
+      --text-secondary: #555;
+      --border: #D0DCE8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container { width: 100%; max-width: 540px; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .header { text-align: center; margin-bottom: 32px; }
+    .header-icon { font-size: 48px; margin-bottom: 8px; }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      line-height: 1.4;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    select, input[type="date"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      color: var(--text);
+      background: #FAFCFF;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23555' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    select:focus, input[type="date"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,94,184,0.15);
+    }
+
+    .date-range {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-download {
+      width: 100%;
+      padding: 13px 20px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-download:hover { background: var(--primary-dark); }
+    .btn-download:active { transform: scale(0.98); }
+    .btn-download:disabled { background: #B0C4DE; cursor: not-allowed; transform: none; }
+
+    .shift-legend {
+      margin-top: 28px;
+      padding: 16px;
+      background: #F0F4F8;
+      border-radius: 10px;
+    }
+
+    .shift-legend h3 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .legend-code {
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: #fff;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .code-a5 { background: #007F3B; }
+    .code-p5 { background: #005EB8; }
+    .code-an { background: #7B2D8B; }
+    .code-n  { background: #DA291C; }
+    .code-off { background: #6B6B6B; }
+
+    #msgBox {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .msg-info { background: #E8F0FE; color: #1A56DB; display: block; }
+    .msg-error { background: #FDE8E8; color: #DA291C; display: block; }
+    .msg-success { background: #E6F4EA; color: #007F3B; display: block; }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 11px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="header-icon">🩺</div>
+        <h1>東區醫院 內科A5病房<br>更表行事曆下載</h1>
+        <p class="subtitle">Pamela Youde Nethersole Eastern Hospital · Department of Medicine, Unit A5</p>
+        <p class="subtitle">2026年4月 – 2026年5月</p>
+      </div>
+
+      <div class="form-group">
+        <label for="staffSelect">選擇護士姓名</label>
+        <select id="staffSelect">
+          <option value="">— 請選擇 —</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>日期範圍</label>
+        <div class="date-range">
+          <input type="date" id="startDate" />
+          <input type="date" id="endDate" />
+        </div>
+      </div>
+
+      <button class="btn-download" id="downloadBtn" disabled>
+        <span>⬇️</span> 下載 .ics 檔案
+      </button>
+
+      <div id="msgBox"></div>
+
+      <div class="shift-legend">
+        <h3>班次代碼說明</h3>
+        <div class="legend-grid">
+          <div class="legend-item"><span class="legend-code code-a5">A5</span> 07:00–15:00</div>
+          <div class="legend-item"><span class="legend-code code-p5">P5</span> 14:00–22:00</div>
+          <div class="legend-item"><span class="legend-code code-an">AN</span> 14:00–08:00 (+1日)</div>
+          <div class="legend-item"><span class="legend-code code-n">N*</span> 22:00–08:00 (+1日)</div>
+          <div class="legend-item"><span class="legend-code code-off">D*</span> 主管更 07:00–15:00</div>
+          <div class="legend-item"><span class="legend-code code-off">NDD</span> Night Duty 22:00–08:00</div>
+          <div class="legend-item" style="grid-column:1/-1">
+            <span class="legend-code code-off">WO / O / AL / 其他</span> 不產生行事曆事件
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">東區醫院內科A5病房 · 2026年4月–5月更表</div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    // ─── Shift 轉換規則 ───
+    // 返回 { startHour, startMin, endHour, endMin, nextDay } 或 null (不用生成)
+    function shiftToTimes(shift) {
+      const s = shift.toUpperCase();
+      if (s === 'A5') return { sh: 7,  sm: 0, eh: 15, em: 0, nextDay: false };
+      if (s === 'P5') return { sh: 14, sm: 0, eh: 22, em: 0, nextDay: false };
+      if (s === 'AN') return { sh: 14, sm: 0, eh: 8,  em: 0, nextDay: true  };
+      if (s.startsWith('N'))  return { sh: 22, sm: 0, eh: 8,  em: 0, nextDay: true  };
+      if (s === 'D*') return { sh: 7,  sm: 0, eh: 15, em: 0, nextDay: false };
+      if (s === 'NDD')return { sh: 22, sm: 0, eh: 8,  em: 0, nextDay: true  };
+      // WO, O, AL, MY1, MY2, AP2, AP3, AP4, D5, SD 等不用生成
+      return null;
+    }
+
+    function shiftLabel(shift) {
+      const s = shift.toUpperCase();
+      const map = {
+        'A5':'A5 班 (07:00–15:00)',
+        'P5':'P5 班 (14:00–22:00)',
+        'AN':'AN 班 (14:00–08:00+1)',
+        'N*':'N* 夜班 (22:00–08:00+1)',
+        'D*':'主管更 (07:00–15:00)',
+        'NDD':'Night Duty (22:00–08:00+1)',
+      };
+      return map[s] || shift;
+    }
+
+    // ─── iCalendar 時間格式 (UTC offset for HK: +0800) ───
+    function fmtDate(d) {
+      return d.getFullYear().toString()
+        + String(d.getMonth()+1).padStart(2,'0')
+        + String(d.getDate()).padStart(2,'0');
+    }
+
+    function fmtTime(h, m) {
+      return String(h).padStart(2,'0') + String(m).padStart(2,'0') + '00';
+    }
+
+    function makeVEVENT(dtstart, dtend, summary, uid) {
+      return [
+        'BEGIN:VEVENT',
+        'DTSTART;TZID=Asia/Hong_Kong:' + dtstart,
+        'DTEND;TZID=Asia/Hong_Kong:' + dtend,
+        'SUMMARY:' + summary,
+        'UID:' + uid,
+        'END:VEVENT'
+      ].join('\r\n');
+    }
+
+    // ─── 生成 ICS ───
+    function generateICS(staffId, startDate, endDate) {
+      const name = STAFF[staffId] || staffId;
+      const events = [];
+      let seq = 0;
+
+      for (const [sid, date, shift] of ROSTER_RAW) {
+        if (sid !== staffId) continue;
+        if (date < startDate || date > endDate) continue;
+
+        const times = shiftToTimes(shift);
+        if (!times) continue; // skip off/AL/WO etc.
+
+        const [y, mo, d] = date.split('-').map(Number);
+        const startDt = new Date(y, mo-1, d, times.sh, times.sm);
+        const endDt   = new Date(y, mo-1, d, times.eh, times.em);
+        const endDateObj = times.nextDay ? new Date(endDt.getTime()) : endDt;
+
+        const dtstart = fmtDate(startDt) + 'T' + fmtTime(times.sh, times.sm);
+        const dtend   = fmtDate(endDateObj) + 'T' + fmtTime(times.eh, times.em);
+        const uid = `${date.replace(/-/g,'')}-${staffId}-${++seq}@dutyroster`;
+        const summary = `${shiftLabel(shift)} - ${name}`;
+
+        events.push(makeVEVENT(dtstart, dtend, summary, uid));
+      }
+
+      const header = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//PYNEH A5 Duty Roster//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'X-WR-CALNAME:東區醫院A5病房更表 - ' + name,
+        'X-WR-TIMEZONE:Asia/Hong_Kong',
+        'BEGIN:VTIMEZONE',
+        'TZID:Asia/Hong_Kong',
+        'BEGIN:STANDARD',
+        'TZOFFSETFROM:+0800',
+        'TZOFFSETTO:+0800',
+        'TZNAME:HKT',
+        'DTSTART:19701025T020000',
+        'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+        'END:STANDARD',
+        'BEGIN:DAYLIGHT',
+        'TZOFFSETFROM:+0800',
+        'TZOFFSETTO:+0800',
+        'TZNAME:HKT',
+        'DTSTART:19700405T020000',
+        'RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU',
+        'END:DAYLIGHT',
+        'END:VTIMEZONE',
+      ].join('\r\n');
+
+      const footer = 'END:VCALENDAR';
+      return [header, ...events, footer].join('\r\n');
+    }
+
+    // ─── UI 邏輯 ───
+    const staffSelect = document.getElementById('staffSelect');
+    const startDate   = document.getElementById('startDate');
+    const endDate     = document.getElementById('endDate');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const msgBox      = document.getElementById('msgBox');
+
+    // Populate staff dropdown
+    const staffIds = Object.keys(STAFF).sort();
+    staffIds.forEach(id => {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = `${id} — ${STAFF[id]}`;
+      staffSelect.appendChild(opt);
+    });
+
+    // Set default date range
+    startDate.value = '2026-04-01';
+    endDate.value   = '2026-05-04';
+    startDate.max   = '2026-05-04';
+    endDate.min     = '2026-04-01';
+    endDate.max     = '2026-05-04';
+
+    function validateForm() {
+      const staffOk = staffSelect.value !== '';
+      const startOk = startDate.value !== '';
+      const endOk   = endDate.value !== '';
+      const rangeOk = startOk && endOk && startDate.value <= endDate.value;
+      downloadBtn.disabled = !(staffOk && rangeOk);
+    }
+
+    staffSelect.addEventListener('change', validateForm);
+    startDate.addEventListener('change', () => {
+      endDate.min = startDate.value;
+      validateForm();
+    });
+    endDate.addEventListener('change', validateForm);
+
+    downloadBtn.addEventListener('click', () => {
+      msgBox.className = '';
+      msgBox.style.display = 'none';
+
+      const sid = staffSelect.value;
+      const s = startDate.value;
+      const e = endDate.value;
+
+      const ics = generateICS(sid, s, e);
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `A5_${sid}_${s}_${e}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const count = (ics.match(/BEGIN:VEVENT/g) || []).length;
+      msgBox.textContent = count > 0
+        ? `✅ 已下載 ${count} 個行事曆事件至 ${a.download}`
+        : '⚠️ 在指定日期範圍內找不到工作班次（WO/O/AL 不用下載）';
+      msgBox.className = count > 0 ? 'msg-success' : 'msg-error';
+      msgBox.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
