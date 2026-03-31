@@ -23,12 +23,12 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 20px;
     }
 
-    .container { width: 100%; max-width: 540px; }
+    .container { width: 100%; max-width: 560px; }
 
     .card {
       background: var(--card-bg);
@@ -97,27 +97,130 @@
       gap: 12px;
     }
 
-    .btn-download {
-      width: 100%;
-      padding: 13px 20px;
-      background: var(--primary);
-      color: #fff;
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      padding: 12px 16px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
-      margin-top: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
+    .btn-preview {
+      background: #E8F0FE;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .btn-preview:hover { background: #D0E3FA; }
+    .btn-preview:active { transform: scale(0.98); }
+    .btn-preview:disabled { background: #F0F0F0; color: #AAA; border-color: #CCC; cursor: not-allowed; }
+
+    .btn-download {
+      background: var(--primary);
+      color: #fff;
+    }
     .btn-download:hover { background: var(--primary-dark); }
     .btn-download:active { transform: scale(0.98); }
-    .btn-download:disabled { background: #B0C4DE; cursor: not-allowed; transform: none; }
+    .btn-download:disabled { background: #B0C4DE; cursor: not-allowed; }
+
+    /* ── Preview Area ── */
+    #previewArea {
+      display: none;
+      margin-top: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .preview-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .preview-empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .preview-table th {
+      background: #F0F4F8;
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .preview-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #EEF2F7;
+      vertical-align: middle;
+    }
+
+    .preview-table tr:last-child td { border-bottom: none; }
+    .preview-table tr:nth-child(even) td { background: #FAFBFC; }
+
+    .cell-code {
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #fff;
+      display: inline-block;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .cell-off { background: #6B6B6B; }
+    .cell-a5  { background: #007F3B; }
+    .cell-p5  { background: #005EB8; }
+    .cell-an  { background: #7B2D8B; }
+    .cell-n   { background: #DA291C; }
+    .cell-d   { background: #37474F; }
+
+    .cell-time { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+    .cell-desc { color: var(--text-secondary); font-size: 12px; }
+    .cell-off-row td { color: #999; }
+    .cell-off-row .cell-time { color: #BBB; }
+
+    #msgBox {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .msg-info    { background: #E8F0FE; color: #1A56DB; display: block; }
+    .msg-error   { background: #FDE8E8; color: #DA291C; display: block; }
+    .msg-success { background: #E6F4EA; color: #007F3B; display: block; }
 
     .shift-legend {
       margin-top: 28px;
@@ -158,23 +261,13 @@
       text-align: center;
     }
 
-    .code-a5 { background: #007F3B; }
-    .code-p5 { background: #005EB8; }
-    .code-an { background: #7B2D8B; }
-    .code-n  { background: #DA291C; }
+    .code-a5  { background: #007F3B; }
+    .code-p5  { background: #005EB8; }
+    .code-an  { background: #7B2D8B; }
+    .code-n   { background: #DA291C; }
+    .code-d   { background: #37474F; }
+    .code-d5  { background: #4A6FA5; }
     .code-off { background: #6B6B6B; }
-
-    #msgBox {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: none;
-    }
-
-    .msg-info { background: #E8F0FE; color: #1A56DB; display: block; }
-    .msg-error { background: #FDE8E8; color: #DA291C; display: block; }
-    .msg-success { background: #E6F4EA; color: #007F3B; display: block; }
 
     .footer {
       text-align: center;
@@ -209,9 +302,20 @@
         </div>
       </div>
 
-      <button class="btn-download" id="downloadBtn" disabled>
-        <span>⬇️</span> 下載 .ics 檔案
-      </button>
+      <div class="btn-row">
+        <button class="btn btn-preview" id="previewBtn" disabled>
+          <span>🔍</span> 預覽更期
+        </button>
+        <button class="btn btn-download" id="downloadBtn" disabled>
+          <span>⬇️</span> 下載 .ics
+        </button>
+      </div>
+
+      <!-- Preview Area -->
+      <div id="previewArea">
+        <div class="preview-header">📋 預覽 — 確認後再下載</div>
+        <div id="previewContent"></div>
+      </div>
 
       <div id="msgBox"></div>
 
@@ -220,13 +324,12 @@
         <div class="legend-grid">
           <div class="legend-item"><span class="legend-code code-a5">A5</span> 07:00–15:00</div>
           <div class="legend-item"><span class="legend-code code-p5">P5</span> 14:00–22:00</div>
-          <div class="legend-item"><span class="legend-code code-an">AN</span> 07:00–13:00 下午班</div>
+          <div class="legend-item"><span class="legend-code code-an">AN</span> 07:00–14:00 / 21:00–23:59（兩段）</div>
           <div class="legend-item"><span class="legend-code code-n">N*</span> 07:00–13:00 Sleeping day</div>
-          <div class="legend-item"><span class="legend-code code-off">D*</span> 主管更 07:00–15:00</div>
-          <div class="legend-item"><span class="legend-code code-off">NDD</span> Night Duty 22:00–08:00</div>
-          <div class="legend-item"><span class="legend-code code-off">MY1</span> 勞動節 5月1日 放假</div>
+          <div class="legend-item"><span class="legend-code code-d">D*</span> 主管更 07:00–15:00</div>
+          <div class="legend-item"><span class="legend-code code-d5">D5</span> Renal培訓 09:00–17:48</div>
           <div class="legend-item" style="grid-column:1/-1">
-            <span class="legend-code code-off">WO / O / AL / MY1 / 其他</span> 不產生行事曆事件
+            <span class="legend-code code-off">WO / O / AL / NDD / MY1 / SD / AP*</span> 放假，不產生行事曆事件
           </div>
         </div>
       </div>
@@ -237,35 +340,77 @@
   <script src="data.js"></script>
   <script>
     // ─── Shift 轉換規則 ───
-    // 返回 { startHour, startMin, endHour, endMin, nextDay } 或 null (不用生成)
+    // 返回 null = 放假/WO，不產生 event
+    // 返回 [ {sh,sm,eh,em,nextDay}, ... ] = 一或多個時段（AN 有兩段）
     function shiftToTimes(shift) {
       const s = shift.toUpperCase();
-      if (s === 'A5')  return { sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false };
-      if (s === 'P5')  return { sh: 14, sm: 0,  eh: 22, em: 0,  nextDay: false };
-      if (s === 'AN')  return { sh: 7,  sm: 0,  eh: 13, em: 0,  nextDay: false };  // 下午班 07:00–13:00
-      if (s === 'NDD') return { sh: 22, sm: 0,  eh: 8,  em: 0,  nextDay: true  };  // Night Duty 22:00–08:00
-      if (s.startsWith('N')) return { sh: 7, sm: 0, eh: 13, em: 0, nextDay: false }; // Sleeping day 07:00–13:00
-      if (s === 'D*')  return { sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false };
-      if (s === 'D5')  return { sh: 9,  sm: 0,  eh: 17, em: 48, nextDay: false }; // Renal培訓 09:00–17:48
-      // WO, O, AL, MY1, MY2, AP2, AP3, AP4, SD 等不用生成
-      return null;
+
+      // ── 放假/WO 系列：不產生 event ──
+      if (s === 'WO')  return null;
+      if (s === 'O')   return null;
+      if (s === 'AL')  return null;
+      if (s === 'NDD') return null;           // ← NDD = 放假（與 WO 一樣）
+      if (s === 'MY1') return null;
+      if (s === 'MY2') return null;
+      if (s === 'SD')  return null;
+      if (s.match(/^AP/)) return null;       // AP*, AP2, AP3, AP4 ...
+
+      // ── 產生 event 的班次 ──
+      if (s === 'A5')
+        return [{ sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false }];
+
+      if (s === 'P5')
+        return [{ sh: 14, sm: 0,  eh: 22, em: 0,  nextDay: false }];
+
+      // AN = 下午班，兩段：07:00–14:00 及 21:00–23:59
+      if (s === 'AN')
+        return [
+          { sh: 7,  sm: 0,  eh: 14, em: 0,  nextDay: false },
+          { sh: 21, sm: 0,  eh: 23, em: 59, nextDay: false },
+        ];
+
+      // N* = Sleeping day，07:00–13:00（精確匹配 N*，不包括 NDD）
+      if (s === 'N*')
+        return [{ sh: 7, sm: 0, eh: 13, em: 0, nextDay: false }];
+
+      if (s === 'D*')
+        return [{ sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false }];
+
+      if (s === 'D5')
+        return [{ sh: 9,  sm: 0,  eh: 17, em: 48, nextDay: false }];
+
+      return null; // 未知的 code 當放假
     }
 
     function shiftLabel(shift) {
       const s = shift.toUpperCase();
       const map = {
-        'A5':'A5 班 (07:00–15:00)',
-        'P5':'P5 班 (14:00–22:00)',
-        'AN':'AN 班 (07:00–13:00) 下午班',
-        'N*':'N* Sleeping day (07:00–13:00)',
-        'D*':'主管更 (07:00–15:00)',
-        'NDD':'Night Duty (22:00–08:00)',
-        'D5':'D5 Renal培訓 (09:00–17:48)',
+        'A5':  'A5 班',
+        'P5':  'P5 班',
+        'AN':  'AN 下午班',
+        'N*':  'N* Sleeping day',
+        'D*':  '主管更',
+        'D5':  'D5 Renal培訓',
+        'NDD': '放假 (NDD)',
       };
       return map[s] || shift;
     }
 
-    // ─── iCalendar 時間格式 (UTC offset for HK: +0800) ───
+    // 某 shift 的時段說明字串（預覽用）
+    function shiftTimeDesc(shift) {
+      const s = shift.toUpperCase();
+      const map = {
+        'A5':  '07:00–15:00',
+        'P5':  '14:00–22:00',
+        'AN':  '07:00–14:00、21:00–23:59',
+        'N*':  '07:00–13:00',
+        'D*':  '07:00–15:00',
+        'D5':  '09:00–17:48',
+      };
+      return map[s] || '—';
+    }
+
+    // ─── iCalendar 時間格式 ───
     function fmtDate(d) {
       return d.getFullYear().toString()
         + String(d.getMonth()+1).padStart(2,'0')
@@ -280,14 +425,14 @@
       return [
         'BEGIN:VEVENT',
         'DTSTART;TZID=Asia/Hong_Kong:' + dtstart,
-        'DTEND;TZID=Asia/Hong_Kong:' + dtend,
+        'DTEND;TZID=Asia/Hong_Kong:'   + dtend,
         'SUMMARY:' + summary,
         'UID:' + uid,
         'END:VEVENT'
       ].join('\r\n');
     }
 
-    // ─── 生成 ICS ───
+    // ─── 產生 ICS ───
     function generateICS(staffId, startDate, endDate) {
       const name = STAFF[staffId] || staffId;
       const events = [];
@@ -298,19 +443,20 @@
         if (date < startDate || date > endDate) continue;
 
         const times = shiftToTimes(shift);
-        if (!times) continue; // skip off/AL/WO etc.
+        if (!times) continue; // 放假/WO
 
         const [y, mo, d] = date.split('-').map(Number);
-        const startDt = new Date(y, mo-1, d, times.sh, times.sm);
-        const endDt   = new Date(y, mo-1, d, times.eh, times.em);
-        const endDateObj = times.nextDay ? new Date(endDt.getTime()) : endDt;
 
-        const dtstart = fmtDate(startDt) + 'T' + fmtTime(times.sh, times.sm);
-        const dtend   = fmtDate(endDateObj) + 'T' + fmtTime(times.eh, times.em);
-        const uid = `${date.replace(/-/g,'')}-${staffId}-${++seq}@dutyroster`;
-        const summary = `${shiftLabel(shift)} - ${name}`;
-
-        events.push(makeVEVENT(dtstart, dtend, summary, uid));
+        // AN 會有兩段，其余一般有一段
+        for (const t of times) {
+          const startDt = new Date(y, mo-1, d, t.sh, t.sm);
+          const endDt   = new Date(y, mo-1, d, t.eh, t.em);
+          const dtstart = fmtDate(startDt) + 'T' + fmtTime(t.sh, t.sm);
+          const dtend   = fmtDate(endDt)   + 'T' + fmtTime(t.eh, t.em);
+          const uid = `${date.replace(/-/g,'')}-${staffId}-${++seq}@dutyroster`;
+          const summary = `${shiftLabel(shift)} - ${name}`;
+          events.push(makeVEVENT(dtstart, dtend, summary, uid));
+        }
       }
 
       const header = [
@@ -340,8 +486,79 @@
         'END:VTIMEZONE',
       ].join('\r\n');
 
-      const footer = 'END:VCALENDAR';
-      return [header, ...events, footer].join('\r\n');
+      return [header, ...events, 'END:VCALENDAR'].join('\r\n');
+    }
+
+    // ─── 取得預覽資料 ───
+    function getPreviewData(staffId, startDate, endDate) {
+      const rows = [];
+      for (const [sid, date, shift] of ROSTER_RAW) {
+        if (sid !== staffId) continue;
+        if (date < startDate || date > endDate) continue;
+        rows.push({ date, shift });
+      }
+      rows.sort((a, b) => a.date.localeCompare(b.date));
+      return rows;
+    }
+
+    function isOffShift(shift) {
+      const s = shift.toUpperCase();
+      return s === 'WO' || s === 'O' || s === 'AL' || s === 'NDD'
+          || s === 'MY1' || s === 'MY2' || s === 'SD' || s.match(/^AP/) !== null;
+    }
+
+    // ─── 渲染預覽 ───
+    function renderPreview(staffId, startDate, endDate) {
+      const data = getPreviewData(staffId, startDate, endDate);
+      const area = document.getElementById('previewArea');
+      const content = document.getElementById('previewContent');
+
+      if (data.length === 0) {
+        area.style.display = 'block';
+        content.innerHTML = '<div class="preview-empty">在指定日期範圍內找不到任何更期記錄</div>';
+        return;
+      }
+
+      const wkday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      let html = `<table class="preview-table">
+        <thead>
+          <tr>
+            <th>日期</th><th>星期</th><th>班次</th><th>時間</th><th>說明</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      for (const { date, shift } of data) {
+        const [y, mo, d] = date.split('-').map(Number);
+        const dt = new Date(y, mo-1, d);
+        const w = wkday[dt.getDay()];
+        const dayStr = `${mo.toString().padStart(2,'0')}/${d.toString().padStart(2,'0')}`;
+        const off = isOffShift(shift);
+
+        // 決定 cell-code class
+        let codeClass = 'cell-off';
+        if (!off) {
+          const firstChar = shift.charAt(0).toLowerCase();
+          if (['a','p','n','d'].includes(firstChar)) {
+            codeClass = 'cell-' + firstChar;
+          }
+        }
+
+        const offClass = off ? ' class="cell-off-row"' : '';
+        const timeStr = shiftTimeDesc(shift);
+
+        html += `<tr${offClass}>
+          <td>${dayStr}</td>
+          <td>${w}</td>
+          <td><span class="cell-code ${codeClass}">${shift}</span></td>
+          <td class="cell-time">${timeStr}</td>
+          <td class="cell-desc">${off ? '放假' : ''}</td>
+        </tr>`;
+      }
+
+      html += '</tbody></table>';
+      area.style.display = 'block';
+      content.innerHTML = html;
     }
 
     // ─── UI 邏輯 ───
@@ -349,6 +566,7 @@
     const startDate   = document.getElementById('startDate');
     const endDate     = document.getElementById('endDate');
     const downloadBtn = document.getElementById('downloadBtn');
+    const previewBtn  = document.getElementById('previewBtn');
     const msgBox      = document.getElementById('msgBox');
 
     // Populate staff dropdown
@@ -372,16 +590,35 @@
       const startOk = startDate.value !== '';
       const endOk   = endDate.value !== '';
       const rangeOk = startOk && endOk && startDate.value <= endDate.value;
-      downloadBtn.disabled = !(staffOk && rangeOk);
+      const allOk = staffOk && rangeOk;
+      downloadBtn.disabled = !allOk;
+      previewBtn.disabled  = !allOk;
     }
 
-    staffSelect.addEventListener('change', validateForm);
-    startDate.addEventListener('change', () => {
-      endDate.min = startDate.value;
+    staffSelect.addEventListener('change', () => {
+      document.getElementById('previewArea').style.display = 'none';
       validateForm();
     });
-    endDate.addEventListener('change', validateForm);
+    startDate.addEventListener('change', () => {
+      endDate.min = startDate.value;
+      document.getElementById('previewArea').style.display = 'none';
+      validateForm();
+    });
+    endDate.addEventListener('change', () => {
+      startDate.max = endDate.value;
+      document.getElementById('previewArea').style.display = 'none';
+      validateForm();
+    });
 
+    // ── 預覽按鈕 ──
+    previewBtn.addEventListener('click', () => {
+      const sid = staffSelect.value;
+      const s = startDate.value;
+      const e = endDate.value;
+      renderPreview(sid, s, e);
+    });
+
+    // ── 下載按鈕 ──
     downloadBtn.addEventListener('click', () => {
       msgBox.className = '';
       msgBox.style.display = 'none';
@@ -401,11 +638,21 @@
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      const count = (ics.match(/BEGIN:VEVENT/g) || []).length;
-      msgBox.textContent = count > 0
-        ? `✅ 已下載 ${count} 個行事曆事件至 ${a.download}`
-        : '⚠️ 在指定日期範圍內找不到工作班次（WO/O/AL 不用下載）';
-      msgBox.className = count > 0 ? 'msg-success' : 'msg-error';
+      // count VEVENTs (each AN = 2)
+      const rawRows = getPreviewData(sid, s, e);
+      let eventCount = 0;
+      for (const { shift } of rawRows) {
+        const times = shiftToTimes(shift);
+        eventCount += times ? times.length : 0;
+      }
+
+      const offCount = rawRows.filter(r => isOffShift(r.shift)).length;
+      const workCount = rawRows.length - offCount;
+
+      msgBox.innerHTML = workCount > 0
+        ? `✅ 已下載，共 <b>${eventCount}</b> 個行事曆事件（${workCount} 個工作天）`
+        : '⚠️ 在指定日期範圍內找不到工作班次（WO/O/AL/NDD 等放假日已略過）';
+      msgBox.className = workCount > 0 ? 'msg-success' : 'msg-error';
       msgBox.style.display = 'block';
     });
   </script>
