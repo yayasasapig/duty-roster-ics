@@ -284,7 +284,7 @@
         <div class="header-icon">🩺</div>
         <h1>東區醫院 內科A5病房<br>更表行事曆下載</h1>
         <p class="subtitle">Pamela Youde Nethersole Eastern Hospital · Department of Medicine, Unit A5</p>
-        <p class="subtitle">2026年4月 – 2026年5月</p>
+        <p class="subtitle">2026年3月至5月</p>
       </div>
 
       <div class="form-group">
@@ -329,12 +329,12 @@
           <div class="legend-item"><span class="legend-code code-d">D*</span> 主管更 07:00–15:00</div>
           <div class="legend-item"><span class="legend-code code-d5">D5</span> Renal培訓 09:00–17:48</div>
           <div class="legend-item" style="grid-column:1/-1">
-            <span class="legend-code code-off">WO / O / AL / NDD / MY1 / SD / AP*</span> 放假，不產生行事曆事件
+            <span class="legend-code code-off">WO / O / AL / NDD / MY1 / SD / CCLV / AP*</span> 放假，不產生行事曆事件
           </div>
         </div>
       </div>
     </div>
-    <div class="footer">東區醫院內科A5病房 · 2026年4月–5月更表</div>
+    <div class="footer">東區醫院內科A5病房 · 2026年3月至5月更表</div>
   </div>
 
   <script src="data.js"></script>
@@ -353,6 +353,7 @@
       if (s === 'MY1') return null;
       if (s === 'MY2') return null;
       if (s === 'SD')  return null;
+      if (s === 'CCLV') return null;        // CCLV = 培訓，放假
       if (s.match(/^AP/)) return null;       // AP*, AP2, AP3, AP4 ...
 
       // ── 產生 event 的班次 ──
@@ -503,7 +504,8 @@
     function isOffShift(shift) {
       const s = shift.toUpperCase();
       return s === 'WO' || s === 'O' || s === 'AL' || s === 'NDD'
-          || s === 'MY1' || s === 'MY2' || s === 'SD' || s.match(/^AP/) !== null;
+          || s === 'MY1' || s === 'MY2' || s === 'SD' || s === 'CCLV'
+          || s.match(/^AP/) !== null;
     }
 
     // ─── 渲染預覽 ───
@@ -578,11 +580,11 @@
     });
 
     // Set default date range
-    startDate.value = '2026-04-01';
-    endDate.value   = '2026-05-04';
-    startDate.max   = '2026-05-04';
-    endDate.min     = '2026-04-01';
-    endDate.max     = '2026-05-04';
+    startDate.value = '2026-03-01';
+    endDate.value   = '2026-05-31';
+    startDate.max   = '2026-05-31';
+    endDate.min     = '2026-03-01';
+    endDate.max     = '2026-05-31';
 
     function validateForm() {
       const staffOk = staffSelect.value !== '';
