@@ -14,9 +14,7 @@
       --text-secondary: #555;
       --border: #D0DCE8;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
@@ -27,34 +25,50 @@
       justify-content: center;
       padding: 20px;
     }
-
-    .container { width: 100%; max-width: 560px; }
-
+    .container { width: 100%; max-width: 720px; }
     .card {
       background: var(--card-bg);
       border-radius: 16px;
       padding: 36px 32px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     }
-
-    .header { text-align: center; margin-bottom: 32px; }
+    .header { text-align: center; margin-bottom: 28px; }
     .header-icon { font-size: 48px; margin-bottom: 8px; }
+    h1 { font-size: 22px; font-weight: 700; color: var(--primary-dark); line-height: 1.4; }
+    .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
 
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      line-height: 1.4;
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
     }
-
-    .subtitle {
-      font-size: 13px;
+    .tab-btn {
+      flex: 1;
+      padding: 11px 16px;
+      border: none;
+      background: #F5F8FB;
+      font-size: 14px;
+      font-weight: 600;
       color: var(--text-secondary);
-      margin-top: 6px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
+    .tab-btn:first-child { border-right: 1.5px solid var(--border); }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+    .tab-btn:not(.active):hover { background: #E8F0FE; color: var(--primary); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
+    /* ── iCal Tab ── */
     .form-group { margin-bottom: 20px; }
-
     label {
       display: block;
       font-size: 13px;
@@ -63,7 +77,6 @@
       margin-bottom: 6px;
       letter-spacing: 0.03em;
     }
-
     select, input[type="date"] {
       width: 100%;
       padding: 10px 14px;
@@ -76,7 +89,6 @@
       appearance: none;
       -webkit-appearance: none;
     }
-
     select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23555' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -84,26 +96,13 @@
       padding-right: 36px;
       cursor: pointer;
     }
-
     select:focus, input[type="date"]:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(0,94,184,0.15);
     }
-
-    .date-range {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .btn-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
+    .date-range { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
     .btn {
       padding: 12px 16px;
       border: none;
@@ -117,152 +116,106 @@
       justify-content: center;
       gap: 6px;
     }
-
-    .btn-preview {
-      background: #E8F0FE;
-      color: var(--primary);
-      border: 1.5px solid var(--primary);
-    }
+    .btn-preview { background: #E8F0FE; color: var(--primary); border: 1.5px solid var(--primary); }
     .btn-preview:hover { background: #D0E3FA; }
     .btn-preview:active { transform: scale(0.98); }
     .btn-preview:disabled { background: #F0F0F0; color: #AAA; border-color: #CCC; cursor: not-allowed; }
-
-    .btn-download {
-      background: var(--primary);
-      color: #fff;
-    }
+    .btn-download { background: var(--primary); color: #fff; }
     .btn-download:hover { background: var(--primary-dark); }
     .btn-download:active { transform: scale(0.98); }
     .btn-download:disabled { background: #B0C4DE; cursor: not-allowed; }
 
-    /* ── Preview Area ── */
-    #previewArea {
-      display: none;
-      margin-top: 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .preview-header {
-      background: var(--primary);
-      color: #fff;
-      padding: 8px 14px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .preview-empty {
-      padding: 20px;
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-
-    .preview-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .preview-table th {
-      background: #F0F4F8;
-      padding: 8px 10px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border-bottom: 1.5px solid var(--border);
-    }
-
-    .preview-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid #EEF2F7;
-      vertical-align: middle;
-    }
-
+    /* ── Preview ── */
+    #previewArea { display: none; margin-top: 16px; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .preview-header { background: var(--primary); color: #fff; padding: 8px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+    .preview-empty { padding: 20px; text-align: center; color: var(--text-secondary); font-size: 14px; }
+    .preview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .preview-table th { background: #F0F4F8; padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1.5px solid var(--border); }
+    .preview-table td { padding: 8px 10px; border-bottom: 1px solid #EEF2F7; vertical-align: middle; }
     .preview-table tr:last-child td { border-bottom: none; }
     .preview-table tr:nth-child(even) td { background: #FAFBFC; }
-
-    .cell-code {
-      font-weight: 700;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      color: #fff;
-      display: inline-block;
-      min-width: 44px;
-      text-align: center;
-    }
-
+    .cell-code { font-weight: 700; font-size: 12px; padding: 2px 8px; border-radius: 4px; color: #fff; display: inline-block; min-width: 44px; text-align: center; }
     .cell-off { background: #6B6B6B; }
-    .cell-a   { background: #007F3B; }
-    .cell-a5  { background: #007F3B; }
-    .cell-p   { background: #005EB8; }
-    .cell-p5  { background: #005EB8; }
-    .cell-an  { background: #7B2D8B; }
-    .cell-n   { background: #DA291C; }
-    .cell-d   { background: #37474F; }
-
+    .cell-a, .cell-a5  { background: #007F3B; }
+    .cell-p, .cell-p5  { background: #005EB8; }
+    .cell-an { background: #7B2D8B; }
+    .cell-n  { background: #DA291C; }
+    .cell-d  { background: #37474F; }
     .cell-time { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
-    .cell-desc { color: var(--text-secondary); font-size: 12px; }
     .cell-off-row td { color: #999; }
-    .cell-off-row .cell-time { color: #BBB; }
-
-    #msgBox {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: none;
-    }
-
+    #msgBox { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
     .msg-info    { background: #E8F0FE; color: #1A56DB; display: block; }
     .msg-error   { background: #FDE8E8; color: #DA291C; display: block; }
     .msg-success { background: #E6F4EA; color: #007F3B; display: block; }
 
-    .shift-legend {
-      margin-top: 28px;
-      padding: 16px;
-      background: #F0F4F8;
-      border-radius: 10px;
+    /* ── Ward View ── */
+    .ward-date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .ward-date-row label { margin-bottom: 0; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--primary-dark); }
+    .ward-nav-btn {
+      padding: 8px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #F5F8FB;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+      transition: background 0.2s;
     }
+    .ward-nav-btn:hover { background: #E8F0FE; }
+    .ward-date-row input[type="date"] { flex: 1; }
 
-    .shift-legend h3 {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+    .ward-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .ward-stat-pill {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #E8F0FE;
+      color: var(--primary);
     }
+    .ward-stat-pill .stat-count { font-size: 16px; font-weight: 700; margin-right: 2px; }
 
-    .legend-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 16px;
-    }
-
-    .legend-item {
+    .ward-group { margin-bottom: 14px; }
+    .ward-group-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 7px 12px;
+      border-radius: 8px 8px 0 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .ward-group-header .group-count { background: rgba(255,255,255,0.25); padding: 1px 8px; border-radius: 10px; font-size: 11px; }
+    .group-WM  .ward-group-header { background: #003087; }
+    .group-APN .ward-group-header { background: #005EB8; }
+    .group-RN  .ward-group-header { background: #007F3B; }
+    .group-EN  .ward-group-header { background: #7B2D8B; }
+    .group-LOC .ward-group-header { background: #37474F; }
+    .ward-group-body { border: 1.5px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; }
+    .ward-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
       gap: 8px;
+      padding: 7px 12px;
+      border-bottom: 1px solid #EEF2F7;
+      align-items: center;
       font-size: 13px;
     }
+    .ward-row:last-child { border-bottom: none; }
+    .ward-row:nth-child(even) { background: #FAFBFC; }
+    .ward-staff-name { font-weight: 500; color: var(--text); }
+    .ward-staff-id { display: block; font-size: 11px; color: var(--text-secondary); font-weight: 400; }
+    .ward-no-rota { color: #AAA; font-size: 12px; padding-left: 8px; }
+    .ward-label { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+    .ward-empty-state { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 14px; }
 
-    .legend-code {
-      font-weight: 700;
-      font-size: 12px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      color: #fff;
-      min-width: 44px;
-      text-align: center;
-    }
-
+    /* ── Legend ── */
+    .shift-legend { margin-top: 28px; padding: 16px; background: #F0F4F8; border-radius: 10px; }
+    .shift-legend h3 { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .legend-code { font-weight: 700; font-size: 12px; padding: 2px 7px; border-radius: 4px; color: #fff; min-width: 44px; text-align: center; }
     .code-a5  { background: #007F3B; }
     .code-p5  { background: #005EB8; }
     .code-an  { background: #7B2D8B; }
@@ -271,12 +224,7 @@
     .code-d5  { background: #4A6FA5; }
     .code-off { background: #6B6B6B; }
 
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 11px;
-      color: #999;
-    }
+    .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #999; }
   </style>
 </head>
 <body>
@@ -289,51 +237,60 @@
         <p class="subtitle">2026年3月至5月</p>
       </div>
 
-      <div class="form-group">
-        <label for="staffSelect">選擇護士姓名</label>
-        <select id="staffSelect">
-          <option value="">— 請選擇 —</option>
-        </select>
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" id="tabICal" onclick="switchTab('ical')">📅 iCalendar 下載</button>
+        <button class="tab-btn" id="tabWard" onclick="switchTab('ward')">🏥 Ward View</button>
       </div>
 
-      <div class="form-group">
-        <label>日期範圍</label>
-        <div class="date-range">
-          <input type="date" id="startDate" />
-          <input type="date" id="endDate" />
+      <!-- iCalendar Panel -->
+      <div class="tab-panel active" id="panelIcal">
+        <div class="form-group">
+          <label for="staffSelect">選擇護士姓名</label>
+          <select id="staffSelect"><option value="">— 請選擇 —</option></select>
         </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-preview" id="previewBtn" disabled>
-          <span>🔍</span> 預覽更期
-        </button>
-        <button class="btn btn-download" id="downloadBtn" disabled>
-          <span>⬇️</span> 下載 .ics
-        </button>
-      </div>
-
-      <!-- Preview Area -->
-      <div id="previewArea">
-        <div class="preview-header">📋 預覽 — 確認後再下載</div>
-        <div id="previewContent"></div>
-      </div>
-
-      <div id="msgBox"></div>
-
-      <div class="shift-legend">
-        <h3>班次代碼說明</h3>
-        <div class="legend-grid">
-          <div class="legend-item"><span class="legend-code code-a5">A5</span> 07:00–15:00</div>
-          <div class="legend-item"><span class="legend-code code-p5">P5</span> 14:00–22:00</div>
-          <div class="legend-item"><span class="legend-code code-an">AN</span> 07:00–14:00 / 21:00–23:59（兩段）</div>
-          <div class="legend-item"><span class="legend-code code-n">N*</span> 07:00–13:00 Sleeping day</div>
-          <div class="legend-item"><span class="legend-code code-d">D*</span> 主管更 07:00–15:00</div>
-          <div class="legend-item"><span class="legend-code code-d5">D5</span> Renal培訓 09:00–17:48</div>
-          <div class="legend-item" style="grid-column:1/-1">
-            <span class="legend-code code-off">WO / O / AL / NDD / MY1 / SD / CCLV / AP*</span> 放假，不產生行事曆事件
+        <div class="form-group">
+          <label>日期範圍</label>
+          <div class="date-range">
+            <input type="date" id="startDate" />
+            <input type="date" id="endDate" />
           </div>
         </div>
+        <div class="btn-row">
+          <button class="btn btn-preview" id="previewBtn" disabled><span>🔍</span> 預覽更期</button>
+          <button class="btn btn-download" id="downloadBtn" disabled><span>⬇️</span> 下載 .ics</button>
+        </div>
+        <div id="previewArea">
+          <div class="preview-header">📋 預覽 — 確認後再下載</div>
+          <div id="previewContent"></div>
+        </div>
+        <div id="msgBox"></div>
+        <div class="shift-legend">
+          <h3>班次代碼說明</h3>
+          <div class="legend-grid">
+            <div class="legend-item"><span class="legend-code code-a5">A5</span> 07:00–15:00</div>
+            <div class="legend-item"><span class="legend-code code-p5">P5</span> 14:00–22:00</div>
+            <div class="legend-item"><span class="legend-code code-an">AN</span> 07:00–14:00 / 21:00–23:59（兩段）</div>
+            <div class="legend-item"><span class="legend-code code-n">N*</span> 07:00–13:00 Sleeping day</div>
+            <div class="legend-item"><span class="legend-code code-d">D*</span> 主管更 07:00–15:00</div>
+            <div class="legend-item"><span class="legend-code code-d5">D5</span> Renal培訓 09:00–17:48</div>
+            <div class="legend-item" style="grid-column:1/-1">
+              <span class="legend-code code-off">WO / O / AL / NDD / MY1 / SD / CCLV / AP*</span> 放假，不產生行事曆事件
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ward View Panel -->
+      <div class="tab-panel" id="panelWard">
+        <div class="ward-date-row">
+          <label>選擇日期</label>
+          <button class="ward-nav-btn" id="wardPrevBtn" onclick="wardNav(-1)">◀</button>
+          <input type="date" id="wardDate" />
+          <button class="ward-nav-btn" id="wardNextBtn" onclick="wardNav(1)">▶</button>
+        </div>
+        <div class="ward-stats" id="wardStats"></div>
+        <div id="wardContent"></div>
       </div>
     </div>
     <div class="footer">東區醫院內科A5病房 · 2026年3月至5月更表</div>
@@ -341,168 +298,16 @@
 
   <script src="data.js"></script>
   <script>
-    // ─── Shift 轉換規則 ───
-    // 返回 null = 放假/WO，不產生 event
-    // 返回 [ {sh,sm,eh,em,nextDay}, ... ] = 一或多個時段（AN 有兩段）
-    function shiftToTimes(shift) {
-      const s = shift.toUpperCase();
-
-      // ── 放假/WO 系列：不產生 event ──
-      if (s === 'WO')  return null;
-      if (s === 'O')   return null;
-      if (s === 'AL')  return null;
-      if (s === 'NDD') return null;           // ← NDD = 放假（與 WO 一樣）
-      if (s === 'MY1') return null;
-      if (s === 'MY2') return null;
-      if (s === 'SD')  return null;
-      if (s === 'CCLV') return null;        // CCLV = 培訓，放假
-      if (s.match(/^AP/)) return null;       // AP*, AP2, AP3, AP4 ...
-
-      // ── 產生 event 的班次 ──
-      if (s === 'A5')
-        return [{ sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false }];
-
-      if (s === 'P5')
-        return [{ sh: 14, sm: 0,  eh: 22, em: 0,  nextDay: false }];
-
-      // AN = 下午班，兩段：07:00–14:00 及 21:00–23:59
-      if (s === 'AN')
-        return [
-          { sh: 7,  sm: 0,  eh: 14, em: 0,  nextDay: false },
-          { sh: 21, sm: 0,  eh: 23, em: 59, nextDay: false },
-        ];
-
-      // N* = Sleeping day，07:00–13:00（精確匹配 N*，不包括 NDD）
-      if (s === 'N*')
-        return [{ sh: 7, sm: 0, eh: 13, em: 0, nextDay: false }];
-
-      if (s === 'D*')
-        return [{ sh: 7,  sm: 0,  eh: 15, em: 0,  nextDay: false }];
-
-      if (s === 'D5')
-        return [{ sh: 9,  sm: 0,  eh: 17, em: 48, nextDay: false }];
-
-      return null; // 未知的 code 當放假
+    // ─── Tab Switching ───
+    function switchTab(tab) {
+      document.getElementById('tabICal').classList.toggle('active', tab === 'ical');
+      document.getElementById('tabWard').classList.toggle('active', tab === 'ward');
+      document.getElementById('panelIcal').classList.toggle('active', tab === 'ical');
+      document.getElementById('panelWard').classList.toggle('active', tab === 'ward');
+      if (tab === 'ward') renderWardView();
     }
 
-    function shiftLabel(shift) {
-      const s = shift.toUpperCase();
-      const map = {
-        'A5':  '返A',
-        'P5':  '返P',
-        'AN':  '返AN',
-        'N*':  'sleeping',
-        'D*':  '主管更',
-        'D5':  'Renal培訓',
-      };
-      return map[s] || shift;
-    }
-
-    // 某 shift 的時段說明字串（預覽用）
-    function shiftTimeDesc(shift) {
-      const s = shift.toUpperCase();
-      const map = {
-        'A5':  '07:00–15:00',
-        'P5':  '14:00–22:00',
-        'AN':  '07:00–14:00、21:00–23:59',
-        'N*':  '07:00–13:00',
-        'D*':  '07:00–15:00',
-        'D5':  '09:00–17:48',
-      };
-      return map[s] || '—';
-    }
-
-    // ─── iCalendar 時間格式 ───
-    function fmtDate(d) {
-      return d.getFullYear().toString()
-        + String(d.getMonth()+1).padStart(2,'0')
-        + String(d.getDate()).padStart(2,'0');
-    }
-
-    function fmtTime(h, m) {
-      return String(h).padStart(2,'0') + String(m).padStart(2,'0') + '00';
-    }
-
-    function makeVEVENT(dtstart, dtend, summary, uid) {
-      return [
-        'BEGIN:VEVENT',
-        'DTSTART;TZID=Asia/Hong_Kong:' + dtstart,
-        'DTEND;TZID=Asia/Hong_Kong:'   + dtend,
-        'SUMMARY:' + summary,
-        'UID:' + uid,
-        'END:VEVENT'
-      ].join('\r\n');
-    }
-
-    // ─── 產生 ICS ───
-    function generateICS(staffId, startDate, endDate) {
-      const name = STAFF[staffId] || staffId;
-      const events = [];
-      let seq = 0;
-
-      for (const [sid, date, shift] of ROSTER_RAW) {
-        if (sid !== staffId) continue;
-        if (date < startDate || date > endDate) continue;
-
-        const times = shiftToTimes(shift);
-        if (!times) continue; // 放假/WO
-
-        const [y, mo, d] = date.split('-').map(Number);
-
-        // AN 會有兩段，其余一般有一段
-        for (const t of times) {
-          const startDt = new Date(y, mo-1, d, t.sh, t.sm);
-          const endDt   = new Date(y, mo-1, d, t.eh, t.em);
-          const dtstart = fmtDate(startDt) + 'T' + fmtTime(t.sh, t.sm);
-          const dtend   = fmtDate(endDt)   + 'T' + fmtTime(t.eh, t.em);
-          const uid = `${date.replace(/-/g,'')}-${staffId}-${++seq}@dutyroster`;
-          const summary = `${shiftLabel(shift)} - ${name}`;
-          events.push(makeVEVENT(dtstart, dtend, summary, uid));
-        }
-      }
-
-      const header = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//PYNEH A5 Duty Roster//EN',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'X-WR-CALNAME:東區醫院A5病房更表 - ' + name,
-        'X-WR-TIMEZONE:Asia/Hong_Kong',
-        'BEGIN:VTIMEZONE',
-        'TZID:Asia/Hong_Kong',
-        'BEGIN:STANDARD',
-        'TZOFFSETFROM:+0800',
-        'TZOFFSETTO:+0800',
-        'TZNAME:HKT',
-        'DTSTART:19701025T020000',
-        'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
-        'END:STANDARD',
-        'BEGIN:DAYLIGHT',
-        'TZOFFSETFROM:+0800',
-        'TZOFFSETTO:+0800',
-        'TZNAME:HKT',
-        'DTSTART:19700405T020000',
-        'RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU',
-        'END:DAYLIGHT',
-        'END:VTIMEZONE',
-      ].join('\r\n');
-
-      return [header, ...events, 'END:VCALENDAR'].join('\r\n');
-    }
-
-    // ─── 取得預覽資料 ───
-    function getPreviewData(staffId, startDate, endDate) {
-      const rows = [];
-      for (const [sid, date, shift] of ROSTER_RAW) {
-        if (sid !== staffId) continue;
-        if (date < startDate || date > endDate) continue;
-        rows.push({ date, shift });
-      }
-      rows.sort((a, b) => a.date.localeCompare(b.date));
-      return rows;
-    }
-
+    // ─── Shift Helpers ───
     function isOffShift(shift) {
       const s = shift.toUpperCase();
       return s === 'WO' || s === 'O' || s === 'AL' || s === 'NDD'
@@ -510,66 +315,197 @@
           || s.match(/^AP/) !== null;
     }
 
-    // ─── 渲染預覽 ───
+    function shiftToTimes(shift) {
+      const s = shift.toUpperCase();
+      if (s === 'WO' || s === 'O' || s === 'AL' || s === 'NDD' || s === 'MY1' || s === 'MY2' || s === 'SD' || s === 'CCLV' || s.match(/^AP/)) return null;
+      if (s === 'A5') return [{ sh: 7, sm: 0, eh: 15, em: 0 }];
+      if (s === 'P5') return [{ sh: 14, sm: 0, eh: 22, em: 0 }];
+      if (s === 'AN') return [{ sh: 7, sm: 0, eh: 14, em: 0 }, { sh: 21, sm: 0, eh: 23, em: 59 }];
+      if (s === 'N*') return [{ sh: 7, sm: 0, eh: 13, em: 0 }];
+      if (s === 'D*') return [{ sh: 7, sm: 0, eh: 15, em: 0 }];
+      if (s === 'D5') return [{ sh: 9, sm: 0, eh: 17, em: 48 }];
+      return null;
+    }
+
+    function shiftLabel(shift) {
+      const s = shift.toUpperCase();
+      const map = { 'A5':'返A', 'P5':'返P', 'AN':'返AN', 'N*':'sleeping', 'D*':'主管更', 'D5':'Renal培訓' };
+      return map[s] || shift;
+    }
+
+    function shiftTimeDesc(shift) {
+      const s = shift.toUpperCase();
+      const map = {
+        'A5':'07:00–15:00', 'P5':'14:00–22:00',
+        'AN':'07:00–14:00、21:00–23:59', 'N*':'07:00–13:00',
+        'D*':'07:00–15:00', 'D5':'09:00–17:48',
+      };
+      return map[s] || '—';
+    }
+
+    function getShiftCodeClass(shift) {
+      if (isOffShift(shift)) return 'code-off';
+      const s = shift.toUpperCase();
+      if (s === 'AN') return 'code-an';
+      if (s === 'N*') return 'code-n';
+      if (s === 'D5') return 'code-d5';
+      if (s.startsWith('D')) return 'code-d';
+      if (s.startsWith('A')) return 'code-a5';
+      if (s.startsWith('P')) return 'code-p5';
+      return 'code-off';
+    }
+
+    // ─── iCal ICS ───
+    function fmtDate(d) {
+      return d.getFullYear().toString() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+    }
+    function fmtTime(h, m) { return String(h).padStart(2,'0') + String(m).padStart(2,'0') + '00'; }
+    function makeVEVENT(dtstart, dtend, summary, uid) {
+      return ['BEGIN:VEVENT','DTSTART;TZID=Asia/Hong_Kong:' + dtstart,'DTEND;TZID=Asia/Hong_Kong:' + dtend,'SUMMARY:' + summary,'UID:' + uid,'END:VEVENT'].join('\r\n');
+    }
+
+    function generateICS(staffId, startDate, endDate) {
+      const name = STAFF[staffId] || staffId;
+      const events = []; let seq = 0;
+      for (const [sid, date, shift] of ROSTER_RAW) {
+        if (sid !== staffId || date < startDate || date > endDate) continue;
+        const times = shiftToTimes(shift);
+        if (!times) continue;
+        const [y, mo, d] = date.split('-').map(Number);
+        for (const t of times) {
+          const startDt = new Date(y, mo-1, d, t.sh, t.sm);
+          const endDt   = new Date(y, mo-1, d, t.eh, t.em);
+          const dtstart = fmtDate(startDt) + 'T' + fmtTime(t.sh, t.sm);
+          const dtend   = fmtDate(endDt)   + 'T' + fmtTime(t.eh, t.em);
+          events.push(makeVEVENT(dtstart, dtend, shiftLabel(shift) + ' - ' + name, date.replace(/-/g,'') + '-' + staffId + '-' + (++seq) + '@dutyroster'));
+        }
+      }
+      const hdr = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PYNEH A5 Duty Roster//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:東區醫院A5病房更表 - ' + name,'X-WR-TIMEZONE:Asia/Hong_Kong','BEGIN:VTIMEZONE','TZID:Asia/Hong_Kong','BEGIN:STANDARD','TZOFFSETFROM:+0800','TZOFFSETTO:+0800','TZNAME:HKT','DTSTART:19701025T020000','RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU','END:STANDARD','BEGIN:DAYLIGHT','TZOFFSETFROM:+0800','TZOFFSETTO:+0800','TZNAME:HKT','DTSTART:19700405T020000','RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU','END:DAYLIGHT','END:VTIMEZONE'].join('\r\n');
+      return [hdr, ...events, 'END:VCALENDAR'].join('\r\n');
+    }
+
+    function getPreviewData(staffId, startDate, endDate) {
+      const rows = [];
+      for (const [sid, date, shift] of ROSTER_RAW) {
+        if (sid !== staffId || date < startDate || date > endDate) continue;
+        rows.push({ date, shift });
+      }
+      rows.sort((a, b) => a.date.localeCompare(b.date));
+      return rows;
+    }
+
     function renderPreview(staffId, startDate, endDate) {
       const data = getPreviewData(staffId, startDate, endDate);
       const area = document.getElementById('previewArea');
       const content = document.getElementById('previewContent');
-
-      if (data.length === 0) {
-        area.style.display = 'block';
-        content.innerHTML = '<div class="preview-empty">在指定日期範圍內找不到任何更期記錄</div>';
-        return;
-      }
-
+      if (data.length === 0) { area.style.display = 'block'; content.innerHTML = '<div class="preview-empty">在指定日期範圍內找不到任何更期記錄</div>'; return; }
       const wkday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      let html = `<table class="preview-table">
-        <thead>
-          <tr>
-            <th>日期</th><th>星期</th><th>班次</th><th>時間</th><th>說明</th>
-          </tr>
-        </thead>
-        <tbody>`;
-
+      let html = '<table class="preview-table"><thead><tr><th>日期</th><th>星期</th><th>班次</th><th>時間</th><th>說明</th></tr></thead><tbody>';
       for (const { date, shift } of data) {
         const [y, mo, d] = date.split('-').map(Number);
         const dt = new Date(y, mo-1, d);
         const w = wkday[dt.getDay()];
-        const dayStr = `${mo.toString().padStart(2,'0')}/${d.toString().padStart(2,'0')}`;
+        const dayStr = mo.toString().padStart(2,'0') + '/' + d.toString().padStart(2,'0');
         const off = isOffShift(shift);
-
-        // 決定 cell-code class
         let codeClass = 'cell-off';
         if (!off) {
-          const upper = shift.toUpperCase();
-          if (upper === 'AN') {
-            codeClass = 'cell-an';
-          } else {
-            const firstChar = shift.charAt(0).toLowerCase();
-            if (['a','p','n','d'].includes(firstChar)) {
-              codeClass = 'cell-' + firstChar;
-            }
-          }
+          const u = shift.toUpperCase();
+          codeClass = u === 'AN' ? 'cell-an' : 'cell-' + shift.charAt(0).toLowerCase();
         }
-
         const offClass = off ? ' class="cell-off-row"' : '';
-        const timeStr = shiftTimeDesc(shift);
-
-        html += `<tr${offClass}>
-          <td>${dayStr}</td>
-          <td>${w}</td>
-          <td><span class="cell-code ${codeClass}">${shift}</span></td>
-          <td class="cell-time">${timeStr}</td>
-          <td class="cell-desc">${off ? '放假' : ''}</td>
-        </tr>`;
+        html += '<tr' + offClass + '><td>' + dayStr + '</td><td>' + w + '</td><td><span class="cell-code ' + codeClass + '">' + shift + '</span></td><td class="cell-time">' + shiftTimeDesc(shift) + '</td><td>' + (off ? '放假' : '') + '</td></tr>';
       }
-
       html += '</tbody></table>';
       area.style.display = 'block';
       content.innerHTML = html;
     }
 
-    // ─── UI 邏輯 ───
+    // ─── Ward View ───
+    const MIN_DATE = '2026-03-01';
+    const MAX_DATE = '2026-05-31';
+    let currentWardDate = MIN_DATE;
+
+    function renderWardView() {
+      const dateStr = currentWardDate;
+      const [y, mo, d] = dateStr.split('-').map(Number);
+      const wkday = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+      const dt = new Date(y, mo - 1, d);
+      const dayLabel = wkday[dt.getDay()];
+      const dateLabel = mo + '月' + d + '日 ' + dayLabel;
+
+      const rotaMap = {};
+      for (const [sid, date, shift] of ROSTER_RAW) { if (date === dateStr) rotaMap[sid] = shift; }
+
+      const groups = [
+        { key: 'WM',  label: 'WM 病房經理', ids: [] },
+        { key: 'APN', label: 'APN 高級護師', ids: [] },
+        { key: 'RN',  label: 'RN 註冊護士', ids: [] },
+        { key: 'EN',  label: 'EN 登記護士', ids: [] },
+        { key: 'LOC', label: 'Locum 替假護士', ids: [] },
+      ];
+      Object.keys(STAFF).sort().forEach(id => {
+        if (id.startsWith('WM')) groups[0].ids.push(id);
+        else if (id.startsWith('APN')) groups[1].ids.push(id);
+        else if (id.startsWith('RN')) groups[2].ids.push(id);
+        else if (id.startsWith('EN')) groups[3].ids.push(id);
+        else if (id.startsWith('L')) groups[4].ids.push(id);
+      });
+
+      let totalWork = 0, totalOff = 0;
+      Object.values(rotaMap).forEach(s => { isOffShift(s) ? totalOff++ : totalWork++; });
+      const totalStaff = Object.keys(STAFF).length;
+      const unassigned = totalStaff - totalWork - totalOff;
+
+      document.getElementById('wardStats').innerHTML =
+        '<div class="ward-stat-pill">👥 上班 <span class="stat-count">' + totalWork + '</span></div>' +
+        '<div class="ward-stat-pill">🏖️ 放假 <span class="stat-count">' + totalOff + '</span></div>' +
+        (unassigned > 0 ? '<div class="ward-stat-pill">❓ 未有更表 <span class="stat-count">' + unassigned + '</span></div>' : '') +
+        '<div class="ward-stat-pill">📅 ' + dateLabel + '</div>';
+
+      let html = '';
+      groups.forEach(g => {
+        if (g.ids.length === 0) return;
+        const rows = g.ids.map(id => {
+          const shift = rotaMap[id] || null;
+          if (shift) {
+            const codeClass = getShiftCodeClass(shift);
+            return '<div class="ward-row">' +
+              '<div><span class="ward-staff-name">' + STAFF[id] + '</span><span class="ward-staff-id">' + id + '</span></div>' +
+              '<span class="cell-code ' + codeClass + '">' + shift + '</span>' +
+              '<span class="ward-label">' + shiftLabel(shift) + ' · ' + shiftTimeDesc(shift) + '</span>' +
+              '</div>';
+          } else {
+            return '<div class="ward-row">' +
+              '<div><span class="ward-staff-name">' + STAFF[id] + '</span><span class="ward-staff-id">' + id + '</span></div>' +
+              '<span class="ward-no-rota">— 未有更表</span><span></span>' +
+              '</div>';
+          }
+        }).join('');
+        html += '<div class="ward-group group-' + g.key + '">' +
+          '<div class="ward-group-header"><span class="group-label">' + g.label + '</span><span class="group-count">' + g.ids.length + '人</span></div>' +
+          '<div class="ward-group-body">' + rows + '</div></div>';
+      });
+
+      if (Object.keys(rotaMap).length === 0 && html === '') {
+        html = '<div class="ward-empty-state">此日期沒有更表記錄</div>';
+      }
+
+      document.getElementById('wardContent').innerHTML = html;
+      document.getElementById('wardDate').value = currentWardDate;
+    }
+
+    function wardNav(delta) {
+      const [y, mo, d] = currentWardDate.split('-').map(Number);
+      const dt = new Date(y, mo - 1, d);
+      dt.setDate(dt.getDate() + delta);
+      const y2 = dt.getFullYear(), m2 = dt.getMonth() + 1, dd = dt.getDate();
+      currentWardDate = y2 + '-' + String(m2).padStart(2,'0') + '-' + String(dd).padStart(2,'0');
+      if (currentWardDate < MIN_DATE) currentWardDate = MIN_DATE;
+      if (currentWardDate > MAX_DATE) currentWardDate = MAX_DATE;
+      renderWardView();
+    }
+
+    // ─── iCal UI ───
     const staffSelect = document.getElementById('staffSelect');
     const startDate   = document.getElementById('startDate');
     const endDate     = document.getElementById('endDate');
@@ -577,16 +513,13 @@
     const previewBtn  = document.getElementById('previewBtn');
     const msgBox      = document.getElementById('msgBox');
 
-    // Populate staff dropdown
-    const staffIds = Object.keys(STAFF).sort();
-    staffIds.forEach(id => {
+    Object.keys(STAFF).sort().forEach(id => {
       const opt = document.createElement('option');
       opt.value = id;
-      opt.textContent = `${id} — ${STAFF[id]}`;
+      opt.textContent = id + ' — ' + STAFF[id];
       staffSelect.appendChild(opt);
     });
 
-    // Set default date range
     startDate.value = '2026-03-01';
     endDate.value   = '2026-05-31';
     startDate.max   = '2026-05-31';
@@ -603,65 +536,38 @@
       previewBtn.disabled  = !allOk;
     }
 
-    staffSelect.addEventListener('change', () => {
-      document.getElementById('previewArea').style.display = 'none';
-      validateForm();
-    });
-    startDate.addEventListener('change', () => {
-      endDate.min = startDate.value;
-      document.getElementById('previewArea').style.display = 'none';
-      validateForm();
-    });
-    endDate.addEventListener('change', () => {
-      startDate.max = endDate.value;
-      document.getElementById('previewArea').style.display = 'none';
-      validateForm();
-    });
+    staffSelect.addEventListener('change', () => { document.getElementById('previewArea').style.display = 'none'; validateForm(); });
+    startDate.addEventListener('change', () => { endDate.min = startDate.value; document.getElementById('previewArea').style.display = 'none'; validateForm(); });
+    endDate.addEventListener('change', () => { startDate.max = endDate.value; document.getElementById('previewArea').style.display = 'none'; validateForm(); });
 
-    // ── 預覽按鈕 ──
-    previewBtn.addEventListener('click', () => {
-      const sid = staffSelect.value;
-      const s = startDate.value;
-      const e = endDate.value;
-      renderPreview(sid, s, e);
-    });
+    previewBtn.addEventListener('click', () => { renderPreview(staffSelect.value, startDate.value, endDate.value); });
 
-    // ── 下載按鈕 ──
     downloadBtn.addEventListener('click', () => {
-      msgBox.className = '';
-      msgBox.style.display = 'none';
-
-      const sid = staffSelect.value;
-      const s = startDate.value;
-      const e = endDate.value;
-
-      const ics = generateICS(sid, s, e);
+      msgBox.className = ''; msgBox.style.display = 'none';
+      const ics = generateICS(staffSelect.value, startDate.value, endDate.value);
       const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
-      a.href     = url;
-      a.download = `A5_${sid}_${s}_${e}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      // count VEVENTs (each AN = 2)
-      const rawRows = getPreviewData(sid, s, e);
+      a.href = url; a.download = 'A5_' + staffSelect.value + '_' + startDate.value + '_' + endDate.value + '.ics';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      const rawRows = getPreviewData(staffSelect.value, startDate.value, endDate.value);
       let eventCount = 0;
-      for (const { shift } of rawRows) {
-        const times = shiftToTimes(shift);
-        eventCount += times ? times.length : 0;
-      }
-
+      rawRows.forEach(r => { const t = shiftToTimes(r.shift); eventCount += t ? t.length : 0; });
       const offCount = rawRows.filter(r => isOffShift(r.shift)).length;
       const workCount = rawRows.length - offCount;
-
       msgBox.innerHTML = workCount > 0
-        ? `✅ 已下載，共 <b>${eventCount}</b> 個行事曆事件（${workCount} 個工作天）`
-        : '⚠️ 在指定日期範圍內找不到工作班次（WO/O/AL/NDD 等放假日已略過）';
+        ? '✅ 已下載，共 <b>' + eventCount + '</b> 個行事曆事件（' + workCount + ' 個工作天）'
+        : '⚠️ 在指定日期範圍內找不到工作班次';
       msgBox.className = workCount > 0 ? 'msg-success' : 'msg-error';
       msgBox.style.display = 'block';
+    });
+
+    // Ward date input
+    document.getElementById('wardDate').addEventListener('change', e => {
+      currentWardDate = e.target.value;
+      if (currentWardDate < MIN_DATE) currentWardDate = MIN_DATE;
+      if (currentWardDate > MAX_DATE) currentWardDate = MAX_DATE;
+      renderWardView();
     });
   </script>
 </body>
