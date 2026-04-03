@@ -164,6 +164,36 @@
     .ward-nav-btn:hover { background: #E8F0FE; }
     .ward-date-row input[type="date"] { flex: 1; }
 
+    /* ── Shift Filter Bar ── */
+    .shift-filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .shift-filter-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-right: 4px; }
+    .filter-btn {
+      padding: 5px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #F5F8FB;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      user-select: none;
+    }
+    .filter-btn .filter-check { font-size: 12px; line-height: 1; }
+    .filter-btn.filter-a { border-color: #007F3B; color: #007F3B; }
+    .filter-btn.filter-a.active { background: #007F3B; color: #fff; }
+    .filter-btn.filter-p { border-color: #005EB8; color: #005EB8; }
+    .filter-btn.filter-p.active { background: #005EB8; color: #fff; }
+    .filter-btn.filter-an { border-color: #7B2D8B; color: #7B2D8B; }
+    .filter-btn.filter-an.active { background: #7B2D8B; color: #fff; }
+    .filter-btn:not(.active) { opacity: 0.55; }
+    .filter-btn:hover { opacity: 1; }
+
+    /* Hidden shift rows */
+    .ward-row.row-hidden { display: none; }
+
     .ward-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .ward-stat-pill {
       padding: 5px 14px;
@@ -288,6 +318,12 @@
           <button class="ward-nav-btn" id="wardPrevBtn" onclick="wardNav(-1)">◀</button>
           <input type="date" id="wardDate" />
           <button class="ward-nav-btn" id="wardNextBtn" onclick="wardNav(1)">▶</button>
+        </div>
+        <div class="shift-filter-bar" id="shiftFilterBar">
+          <span class="shift-filter-label">顯示班次</span>
+          <button class="filter-btn filter-a active" id="filterA" onclick="toggleShiftFilter('A')"><span class="filter-check">☑️</span> A</button>
+          <button class="filter-btn filter-p active" id="filterP" onclick="toggleShiftFilter('P')"><span class="filter-check">☑️</span> P</button>
+          <button class="filter-btn filter-an active" id="filterAN" onclick="toggleShiftFilter('AN')"><span class="filter-check">☑️</span> AN</button>
         </div>
         <div class="ward-stats" id="wardStats"></div>
         <div id="wardContent"></div>
@@ -469,7 +505,8 @@
           const shift = rotaMap[id] || null;
           if (shift) {
             const codeClass = getShiftCodeClass(shift);
-            return '<div class="ward-row">' +
+            const shiftUpper = shift.toUpperCase();
+            return '<div class="ward-row" data-shift="' + shiftUpper + '">' +
               '<div><span class="ward-staff-name">' + STAFF[id] + '</span><span class="ward-staff-id">' + id + '</span></div>' +
               '<span class="cell-code ' + codeClass + '">' + shift + '</span>' +
               '<span class="ward-label">' + shiftLabel(shift) + ' · ' + shiftTimeDesc(shift) + '</span>' +
@@ -492,6 +529,7 @@
 
       document.getElementById('wardContent').innerHTML = html;
       document.getElementById('wardDate').value = currentWardDate;
+      applyShiftFilters();
     }
 
     function wardNav(delta) {
@@ -503,6 +541,34 @@
       if (currentWardDate < MIN_DATE) currentWardDate = MIN_DATE;
       if (currentWardDate > MAX_DATE) currentWardDate = MAX_DATE;
       renderWardView();
+    }
+
+    // ─── Shift Filters ───
+    const shiftFilters = { A: true, P: true, AN: true };
+
+    function toggleShiftFilter(type) {
+      shiftFilters[type] = !shiftFilters[type];
+      const btn = document.getElementById('filter' + type);
+      if (shiftFilters[type]) {
+        btn.classList.add('active');
+        btn.querySelector('.filter-check').textContent = '☑️';
+      } else {
+        btn.classList.remove('active');
+        btn.querySelector('.filter-check').textContent = '☐';
+      }
+      applyShiftFilters();
+    }
+
+    function applyShiftFilters() {
+      document.querySelectorAll('.ward-row[data-shift]').forEach(row => {
+        const shift = row.getAttribute('data-shift');
+        const u = shift.toUpperCase();
+        let hidden = false;
+        if ((u === 'A5') && !shiftFilters.A) hidden = true;
+        if ((u === 'P5') && !shiftFilters.P) hidden = true;
+        if ((u === 'AN') && !shiftFilters.AN) hidden = true;
+        row.classList.toggle('row-hidden', hidden);
+      });
     }
 
     // ─── iCal UI ───
