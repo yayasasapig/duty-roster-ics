@@ -188,6 +188,8 @@
     .filter-btn.filter-p.active { background: #005EB8; color: #fff; }
     .filter-btn.filter-an { border-color: #7B2D8B; color: #7B2D8B; }
     .filter-btn.filter-an.active { background: #7B2D8B; color: #fff; }
+    .filter-btn.filter-off { border-color: #6B6B6B; color: #6B6B6B; }
+    .filter-btn.filter-off.active { background: #6B6B6B; color: #fff; }
     .filter-btn:not(.active) { opacity: 0.55; }
     .filter-btn:hover { opacity: 1; }
 
@@ -324,6 +326,7 @@
           <button class="filter-btn filter-a active" id="filterA" onclick="toggleShiftFilter('A')"><span class="filter-check">☑️</span> A</button>
           <button class="filter-btn filter-p active" id="filterP" onclick="toggleShiftFilter('P')"><span class="filter-check">☑️</span> P</button>
           <button class="filter-btn filter-an active" id="filterAN" onclick="toggleShiftFilter('AN')"><span class="filter-check">☑️</span> AN</button>
+          <button class="filter-btn filter-off" id="filterOFF" onclick="toggleShiftFilter('OFF')"><span class="filter-check">☐</span> 🏖️ 假期</button>
         </div>
         <div class="ward-stats" id="wardStats"></div>
         <div id="wardContent"></div>
@@ -544,7 +547,7 @@
     }
 
     // ─── Shift Filters ───
-    const shiftFilters = { A: true, P: true, AN: true };
+    const shiftFilters = { A: true, P: true, AN: true, OFF: false };
 
     function toggleShiftFilter(type) {
       shiftFilters[type] = !shiftFilters[type];
@@ -567,6 +570,9 @@
         if ((u === 'A5') && !shiftFilters.A) hidden = true;
         if ((u === 'P5') && !shiftFilters.P) hidden = true;
         if ((u === 'AN') && !shiftFilters.AN) hidden = true;
+        // Off-shift codes: WO, O, AL, NDD, MY1, SD, CCLV, AP*
+        const isOffShiftCode = u === 'WO' || u === 'O' || u === 'AL' || u === 'NDD' || u === 'MY1' || u === 'SD' || u === 'CCLV' || u.startsWith('AP');
+        if (isOffShiftCode && !shiftFilters.OFF) hidden = true;
         row.classList.toggle('row-hidden', hidden);
       });
     }
