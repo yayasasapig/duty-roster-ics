@@ -257,6 +257,67 @@
     .code-off { background: #6B6B6B; }
 
     .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #999; }
+
+    /* ── Print View ── */
+    .print-table-wrap { overflow-x: auto; }
+    .print-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+    .print-table th, .print-table td { border: 1px solid #444; padding: 5px 6px; text-align: center; vertical-align: middle; word-break: break-word; }
+    .print-table th { background: #D0DCE8; font-weight: 700; font-size: 11px; color: #1A1A2E; }
+    .print-table th.staff-col { width: 180px; text-align: left; background: #003087; color: #fff; }
+    .print-table th.notes-col { width: 140px; background: #F0F4F8; }
+    .print-table td.staff-cell { text-align: left; font-size: 11px; white-space: nowrap; }
+    .print-table td.notes-cell { background: #F9F9F9; }
+    .print-staff-name { font-weight: 600; display: block; }
+    .print-staff-id { font-size: 10px; color: #666; font-weight: 400; }
+    .print-group-header td {
+      background: #003087 !important;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1.5px solid #000;
+      letter-spacing: 0.03em;
+    }
+    .print-group-separator td { border: none; height: 6px; background: transparent; }
+    .print-subheader th { background: #E8F0FE; color: #003087; font-size: 10px; }
+    .print-cell { font-weight: 700; font-size: 12px; padding: 3px 4px; border-radius: 3px; color: #fff; display: inline-block; min-width: 28px; text-align: center; }
+    .print-off { background: #CCC !important; color: #666 !important; font-weight: 400; }
+    .print-empty-cell { background: #F5F5F5; }
+    .print-footer-row td { background: #F0F4F8; border-top: 2px solid #000; font-size: 11px; text-align: left; padding: 8px 10px; }
+    .print-footer-check { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .print-footer-check label { font-weight: 600; }
+    .print-footer-check input[type="checkbox"] { width: 14px; height: 14px; }
+    .print-empty-state { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 14px; }
+    .print-title { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+    .print-btn-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .btn-print { background: #37474F; color: #fff; border: none; }
+    .btn-print:hover { background: #1a252b; }
+
+    /* ── Print Styles ── */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { max-width: 100%; }
+      .card { box-shadow: none; padding: 12px 8px; border-radius: 0; }
+      .header { margin-bottom: 12px; }
+      .tabs, .shift-filter-bar, .ward-date-row, .btn-print-row,
+      #printContent .print-btn-row, .footer, .ward-stats, .shift-legend,
+      .ward-nav-btn { display: none !important; }
+      .tab-panel { display: none !important; }
+      #panelPrint { display: block !important; }
+      #printContent .print-table-wrap { overflow: visible; }
+      .print-table th.staff-col { background: #003087 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-group-header td { background: #003087 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-table th { background: #D0DCE8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-table td { border-color: #333; }
+      .print-subheader th { background: #E8F0FE !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-cell { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-off { background: #DDD !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-footer-row td { background: #F0F4F8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-top: 2px solid #000 !important; }
+      .print-footer-check input[type="checkbox"] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-table { font-size: 11px; }
+      @page { size: landscape; margin: 10mm; }
+    }
   </style>
 </head>
 <body>
@@ -273,6 +334,7 @@
       <div class="tabs">
         <button class="tab-btn active" id="tabICal" onclick="switchTab('ical')">📅 iCalendar 下載</button>
         <button class="tab-btn" id="tabWard" onclick="switchTab('ward')">🏥 Ward View</button>
+        <button class="tab-btn" id="tabPrint" onclick="switchTab('print')">🖨️ 打印視圖</button>
       </div>
 
       <!-- iCalendar Panel -->
@@ -313,6 +375,17 @@
         </div>
       </div>
 
+      <!-- Print View Panel -->
+      <div class="tab-panel" id="panelPrint">
+        <div class="ward-date-row">
+          <label>選擇週起始（週一）</label>
+          <button class="ward-nav-btn" id="printPrevBtn" onclick="printNav(-7)">◀</button>
+          <input type="date" id="printWeekStart" />
+          <button class="ward-nav-btn" id="printNextBtn" onclick="printNav(7)">▶</button>
+        </div>
+        <div id="printContent"></div>
+      </div>
+
       <!-- Ward View Panel -->
       <div class="tab-panel" id="panelWard">
         <div class="ward-date-row">
@@ -341,9 +414,12 @@
     function switchTab(tab) {
       document.getElementById('tabICal').classList.toggle('active', tab === 'ical');
       document.getElementById('tabWard').classList.toggle('active', tab === 'ward');
+      document.getElementById('tabPrint').classList.toggle('active', tab === 'print');
       document.getElementById('panelIcal').classList.toggle('active', tab === 'ical');
       document.getElementById('panelWard').classList.toggle('active', tab === 'ward');
+      document.getElementById('panelPrint').classList.toggle('active', tab === 'print');
       if (tab === 'ward') renderWardView();
+      if (tab === 'print') renderPrintView();
     }
 
     // ─── Shift Helpers ───
@@ -640,6 +716,175 @@
       if (currentWardDate < MIN_DATE) currentWardDate = MIN_DATE;
       if (currentWardDate > MAX_DATE) currentWardDate = MAX_DATE;
       renderWardView();
+    });
+
+    // ─── Print View ───
+    // Get Monday of the week for a given date string
+    function getMonday(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      const day = dt.getDay(); // 0=Sun, 1=Mon...
+      const diff = day === 0 ? -6 : 1 - day; // go back to Monday
+      dt.setDate(dt.getDate() + diff);
+      return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+    }
+
+    let currentPrintWeekStart = getMonday('2026-03-30'); // default to week of 30/3
+
+    function fmtDisplayDate(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      return d + '/' + m;
+    }
+
+    function getWeekDates(weekStart) {
+      const dates = [];
+      const [y, m, d] = weekStart.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      for (let i = 0; i < 7; i++) {
+        const dd = new Date(dt);
+        dd.setDate(dt.getDate() + i);
+        const y2 = dd.getFullYear(), m2 = dd.getMonth() + 1, day2 = dd.getDate();
+        dates.push(y2 + '-' + String(m2).padStart(2, '0') + '-' + String(day2).padStart(2, '0'));
+      }
+      return dates;
+    }
+
+    function getShiftForCell(staffId, date) {
+      for (const [sid, d, shift] of ROSTER_RAW) {
+        if (sid === staffId && d === date) return shift;
+      }
+      return null;
+    }
+
+    function getPrintCellClass(shift) {
+      if (!shift) return 'print-empty-cell';
+      if (isOffShift(shift)) return 'print-off';
+      const s = shift.toUpperCase();
+      if (s === 'AN') return 'cell-an';
+      if (s === 'N*' || s === 'NDD') return 'cell-n';
+      if (s === 'D5') return 'cell-d5';
+      if (s.startsWith('D')) return 'cell-d';
+      if (s.startsWith('A')) return 'cell-a';
+      if (s.startsWith('P')) return 'cell-p';
+      return 'cell-off';
+    }
+
+    function renderPrintView() {
+      const weekStart = currentPrintWeekStart;
+      const weekDates = getWeekDates(weekStart);
+      const wkdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+      // Title
+      const [y, m, d] = weekStart.split('-').map(Number);
+      const endDt = new Date(y, m - 1, d);
+      endDt.setDate(endDt.getDate() + 6);
+      const endLabel = endDt.getDate() + '/' + (endDt.getMonth() + 1);
+      const startLabel = d + '/' + m;
+      const title = '🖨️ A5 Team — Week of ' + startLabel + ' to ' + endLabel + '/' + endDt.getFullYear();
+
+      // Build roster map
+      const rotaMap = {}; // date -> staffId -> shift
+      weekDates.forEach(date => { rotaMap[date] = {}; });
+      for (const [sid, date, shift] of ROSTER_RAW) {
+        if (rotaMap[date]) rotaMap[date][sid] = shift;
+      }
+
+      // Group staff
+      const groups = [
+        { key: 'WM',  label: 'WM 病房經理', ids: [] },
+        { key: 'APN', label: 'APN 高級護師', ids: [] },
+        { key: 'RN',  label: 'RN 註冊護士', ids: [] },
+        { key: 'EN',  label: 'EN 登記護士', ids: [] },
+        { key: 'LOC', label: 'Locum 替假護士', ids: [] },
+      ];
+      Object.keys(STAFF).sort().forEach(id => {
+        if (id.startsWith('WM')) groups[0].ids.push(id);
+        else if (id.startsWith('APN')) groups[1].ids.push(id);
+        else if (id.startsWith('RN')) groups[2].ids.push(id);
+        else if (id.startsWith('EN')) groups[3].ids.push(id);
+        else groups[4].ids.push(id);
+      });
+
+      // Table header row 1 (day names)
+      let headerRow1 = '<tr><th class="staff-col">員工</th>';
+      wkdayLabels.forEach(w => { headerRow1 += '<th>' + w + '</th>'; });
+      headerRow1 += '<th class="notes-col">備註</th></tr>';
+
+      // Table header row 2 (dates)
+      let headerRow2 = '<tr class="print-subheader"><th></th>';
+      weekDates.forEach(date => { headerRow2 += '<th>' + fmtDisplayDate(date) + '</th>'; });
+      headerRow2 += '<th></th></tr>';
+
+      // Build group rows
+      let bodyHtml = '';
+      groups.forEach(g => {
+        if (g.ids.length === 0) return;
+
+        // Group header
+        bodyHtml += '<tr class="print-group-header"><td colspan="9">' + g.label + '</td></tr>';
+
+        // Sub-header (day names + dates)
+        bodyHtml += headerRow2;
+
+        // Staff rows
+        g.ids.forEach(id => {
+          bodyHtml += '<tr>';
+          bodyHtml += '<td class="staff-cell"><span class="print-staff-name">' + STAFF[id] + '</span><span class="print-staff-id">' + id + '</span></td>';
+          weekDates.forEach(date => {
+            const shift = rotaMap[date] ? (rotaMap[date][id] || null) : null;
+            const cellClass = shift ? getPrintCellClass(shift) : 'print-empty-cell';
+            const isOff = shift && isOffShift(shift);
+            bodyHtml += '<td class="' + (shift ? 'print-cell ' + cellClass + (isOff ? ' print-off' : '') : 'print-empty-cell') + '">' + (shift || '') + '</td>';
+          });
+          bodyHtml += '<td class="notes-cell"></td>';
+          bodyHtml += '</tr>';
+        });
+
+        // Group separator
+        bodyHtml += '<tr class="print-group-separator"><td colspan="9"></td></tr>';
+      });
+
+      // Footer
+      bodyHtml += '<tr class="print-footer-row"><td colspan="9">' +
+        '<div class="print-footer-check">' +
+        '<label>☐ Check E-Box</label>' +
+        '<input type="checkbox" />' +
+        '<span style="margin-left:20px">✓ 確認護士長：______________________</span>' +
+        '</div></td></tr>';
+
+      const tableHtml = '<div class="print-table-wrap"><table class="print-table"><thead>' + headerRow1 + '</thead><tbody>' + bodyHtml + '</tbody></table></div>';
+
+      const html = '<div class="print-title">' + title + '</div>' +
+        '<div class="print-btn-row"><button class="btn btn-print" onclick="window.print()">🖨️ 打印</button></div>' +
+        tableHtml;
+
+      document.getElementById('printContent').innerHTML = html;
+      document.getElementById('printWeekStart').value = currentPrintWeekStart;
+    }
+
+    function printNav(delta) {
+      const [y, m, d] = currentPrintWeekStart.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      dt.setDate(dt.getDate() + delta);
+      let newStart = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+      if (newStart < MIN_DATE) newStart = MIN_DATE;
+      const [y2, m2, d2] = newStart.split('-').map(Number);
+      const checkDt = new Date(y2, m2 - 1, d2);
+      if (checkDt > new Date(2026, 4, 31)) newStart = '2026-05-25';
+      currentPrintWeekStart = newStart;
+      renderPrintView();
+    }
+
+    document.getElementById('printWeekStart').addEventListener('change', e => {
+      const raw = e.target.value;
+      if (!raw) return;
+      const monday = getMonday(raw);
+      const [y, m, d] = monday.split('-').map(Number);
+      const checkDt = new Date(y, m - 1, d);
+      if (checkDt < new Date(2026, 2, 1)) return;
+      if (checkDt > new Date(2026, 4, 31)) return;
+      currentPrintWeekStart = monday;
+      renderPrintView();
     });
   </script>
 </body>
