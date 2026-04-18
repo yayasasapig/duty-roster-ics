@@ -111,6 +111,9 @@
           <button id="wardPrevBtn" class="p-2 rounded-xl border border-border hover:bg-bg transition-all duration-200"><i data-lucide="chevron-left" class="w-4 h-4 text-slate3" stroke-width="1.5"></i></button>
           <input type="date" id="wardDate" class="flex-1 px-4 py-2.5 rounded-xl border border-border bg-bg text-slate2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-mint/30 transition-all duration-200" />
           <button id="wardNextBtn" class="p-2 rounded-xl border border-border hover:bg-bg transition-all duration-200"><i data-lucide="chevron-right" class="w-4 h-4 text-slate3" stroke-width="1.5"></i></button>
+          <button id="wardTodayBtn" class="px-3 py-2 rounded-xl border border-mint bg-mint/5 text-mint hover:bg-mint/10 transition-all duration-200 flex items-center gap-1.5 text-xs font-bold" title="跳到今日">
+            <i data-lucide="calendar-check" class="w-4 h-4" stroke-width="2"></i>今日
+          </button>
         </div>
         <div class="flex items-center gap-3 mb-4">
           <div class="relative flex-1">
@@ -184,7 +187,7 @@
       if(target==='print')renderPrintView();
       lucide.createIcons();
     });});
-    var shiftFilters={A:true,P:true,AN:true,OFF:false};
+    var shiftFilters={A:true,P:true,AN:true,OFF:true};
     var filterActiveClass={A:'bg-mint border-mint text-white',P:'bg-blue-400 border-blue-400 text-white',AN:'bg-violet-400 border-violet-400 text-white',OFF:'bg-slate-400 border-slate-400 text-white'};
     var filterInactiveClass={A:'bg-bg border-slate-200 text-slate-400',P:'bg-bg border-slate-200 text-slate-400',AN:'bg-bg border-slate-200 text-slate-400',OFF:'bg-bg border-slate-200 text-slate-400'};
     function updateFilterUI(){document.querySelectorAll('.shift-filter-btn').forEach(function(btn){var f=btn.dataset.filter;btn.className='shift-filter-btn px-3 py-1.5 rounded-full border-2 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 '+(shiftFilters[f]?filterActiveClass[f]:filterInactiveClass[f]);});}
@@ -311,6 +314,15 @@
     document.getElementById('wardSearch').addEventListener('input',function(){
       wardSearchQuery=this.value;
       applyWardSearch();
+    });
+    document.getElementById('wardTodayBtn').addEventListener('click',function(){
+      var today=new Date();
+      var y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
+      var todayStr=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      if(todayStr>=MIN_DATE&&todayStr<=MAX_DATE){
+        currentWardDate=todayStr;
+        renderWardView();
+      }
     });
     validateForm();
   </script>
