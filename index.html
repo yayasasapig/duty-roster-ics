@@ -150,6 +150,8 @@
     </footer>
   </div>
   <script src="data.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#5BBCAD">
   <script>
     lucide.createIcons();
     const currentDate=new Date();
@@ -345,6 +347,32 @@
       staffSelect.value = savedStaffId;
     }
     validateForm();
-  </script>
+
+  // PWA: register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+
+  // Offline banner
+  function showOffline() {
+    const b = document.createElement('div');
+    b.id = 'offline-banner';
+    b.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate2 text-white text-sm px-4 py-2 rounded-xl shadow-lg z-50 flex items-center gap-2';
+    b.innerHTML = '<i data-lucide="wifi-off" class="w-4 h-4"></i> 離線模式';
+    document.body.appendChild(b);
+    if (window.lucide) lucide.createIcons();
+  }
+  function hideOffline() {
+    const b = document.getElementById('offline-banner');
+    if (b) b.remove();
+  }
+  window.addEventListener('offline', showOffline);
+  window.addEventListener('online', hideOffline);
+  if (!navigator.onLine) showOffline();
+
+  validateForm();
+</script>
 </body>
 </html>

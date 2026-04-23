@@ -1,0 +1,26 @@
+{
+  "name": "東區醫院 A5 更表",
+  "short_name": "A5更表",
+  "description": "東區醫院 A5 病房護士更表查詢工具",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fafcfb",
+  "theme_color": "#5BBCAD",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%235BBCAD' rx='32'/><text x='96' y='130' text-anchor='middle' font-size='100' font-family='system-ui' fill='white'>A5</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%235BBCAD' rx='64'/><text x='256' y='340' text-anchor='middle' font-size='260' font-family='system-ui' fill='white'>A5</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "productivity"],
+  "lang": "zh-Hant"
+}
