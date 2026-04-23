@@ -7,21 +7,15 @@ on:
         description: 'Path to roster file (CSV/Excel)'
         required: false
         default: 'roster-update/roster.csv'
-      mode:
-        description: 'Update mode'
-        required: true
-        default: 'manual-csv'
-        type: choice
-        options:
-          - manual-csv
-          - manual-json
-
-  schedule:
-    # 每月1日自動提醒（不自動更新，需手動確認）
-    - cron: '0 9 1 * *'
 
   repository_dispatch:
     types: [roster-update]
+
+  push:
+    branches: [main]
+    paths:
+      - 'DutyRoster.md'
+      - 'data.js'
 
 permissions:
   contents: write
@@ -29,36 +23,7 @@ permissions:
   id-token: write
 
 jobs:
-  check-input:
-    runs-on: ubuntu-latest
-    outputs:
-      needs_input: ${{ steps.check.outputs.needs_input }}
-      latest_date: ${{ steps.check.outputs.latest_date }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - id: check
-        run: |
-          # 檢查 data.js 最新日期
-          LATEST=$(grep -oP '\d{4}-\d{2}-\d{2}' data.js | sort | tail -1)
-          echo "Latest date in data.js: $LATEST"
-          echo "latest_date=$LATEST" >> $GITHUB_OUTPUT
-
-          # 檢查是否有上傳的更新檔案
-          if [ -f "roster-update/roster.csv" ]; then
-            echo "needs_input=false" >> $GITHUB_OUTPUT
-            echo "Found roster.csv"
-          elif [ -f "roster-update/roster.xlsx" ]; then
-            echo "needs_input=false" >> $GITHUB_OUTPUT
-            echo "Found roster.xlsx"
-          else
-            echo "needs_input=true" >> $GITHUB_OUTPUT
-            echo "No update file found — manual upload needed"
-          fi
-
-  update-csv:
-    needs: check-input
-    if: needs_input == 'false'
+  process-roster:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,137 +34,90 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install pandas openpyxl python-dateutil
+        run: pip install pandas
 
-      - name: Process roster CSV
+      - name: Process roster
         id: process
         run: |
           python << 'EOF'
-          import json
-          from datetime import datetime, timedelta
-
-          import pandas as pd
-
-          # 嘗試讀取 CSV 或 Excel
-          try:
-              df = pd.read_csv('roster-update/roster.csv')
-          except FileNotFoundError:
-              df = pd.read_excel('roster-update/roster.xlsx')
-
-          print("Columns:", df.columns.tolist())
-          print("Shape:", df.shape)
-          print(df.head(3).to_string())
-
-          # 假設格式：員工ID, 日期, 班次代碼
-          # 如果欄位名稱不同，請調整這裡
-          # 例如：df.columns = ['staff_id', 'date', 'shift']
-          # 目前嘗試自動偵測
-          df.columns = [c.strip().lower() for c in df.columns]
-
-          # 產生 ROSTER_RAW 格式
+          import re
+          
+          # 讀取 DutyRoster.md
+          with open('DutyRoster.md', 'r') as f:
+            content = f.read()
+          
+          # 找 CSV 數據 section
+          lines = content.split('\n')
+          csv_lines = []
+          in_csv = False
+          
+          for line in lines:
+            if line.startswith('WM001,') or line.startswith('APN001,') or line.startswith('RN0') or line.startswith('EN0') or line.startswith('L00'):
+              in_csv = True
+            if in_csv:
+              if ',' in line and len(line) > 5:
+                csv_lines.append(line.strip())
+          
+          # 生成 data.js
           records = []
-          for _, row in df.iterrows():
-              # 嘗試自動對應欄位
-              sid = str(row.iloc[0]).strip()
-              date = str(row.iloc[1]).strip()
-              shift = str(row.iloc[2]).strip()
-              records.append(f'["{sid}", "{date}", "{shift}"]')
-
-          print(f"\nGenerated {len(records)} records")
-          print("First 3:", records[:3])
-
-          # 寫入 data.js 更新區塊
-          import os
+          for line in csv_lines:
+            parts = line.split(',')
+            if len(parts) >= 3:
+              staff_id = parts[0].strip()
+              date = parts[1].strip()
+              shift = parts[2].strip()
+              records.append(f'["{staff_id}", "{date}", "{shift}"]')
+          
+          # 讀取現有 data.js
           with open('data.js', 'r') as f:
-              content = f.read()
-
-          marker = '// --- AUTO-UPDATE-START ---'
-          new_block = f'// --- AUTO-UPDATE-START ---\nconst ROSTER_UPDATE = [\n  {", ".join(records)}\n];\n// --- AUTO-UPDATE-END ---'
-
-          if marker in content:
-              # 已有舊 block，替換
-              import re
-              pattern = r'// --- AUTO-UPDATE-START ---.*?// --- AUTO-UPDATE-END ---'
-              content = re.sub(pattern, new_block, content, flags=re.DOTALL)
-          else:
-              content += '\n\n' + new_block
-
+            data_content = f.read()
+          
+          # 找到 ROSTER_RAW section
+          marker_start = 'const ROSTER_RAW = ['
+          marker_end = '];'
+          
+          start_idx = data_content.find(marker_start)
+          end_idx = data_content.find(marker_end, start_idx)
+          
+          if start_idx != -1 and end_idx != -1:
+            # 替換內容
+            new_records = ',\n  '.join(records[:500])  # 限制最多500條
+            new_section = f'{marker_start}\n  {new_records}\n  {marker_end}'
+            data_content = data_content[:start_idx] + new_section + data_content[end_idx+2:]
+          
+          # 寫回 data.js
           with open('data.js', 'w') as f:
-              f.write(content)
-
-          print("data.js updated")
+            f.write(data_content)
+          
+          print(f"Updated data.js with {len(records)} records")
+          
+          # 輸出 latest date
+          if records:
+            import subprocess
+            dates = [r.split('"')[3] for r in records]
+            latest = max(dates) if dates else ''
+            print(f"Latest date: {latest}")
+            with open('.latest_date', 'w') as f:
+              f.write(latest)
           EOF
 
-      - name: Commit updated data
+      - name: Configure Git
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
+
+      - name: Commit changes
+        run: |
           git add data.js
-          git diff --cached --quiet && echo "No changes" || git commit -m "chore: update roster data $(date +%Y-%m-%d)"
-          git push
-
-  upload-reminder:
-    needs: check-input
-    if: needs_input == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create upload instructions
-        run: |
-          mkdir -p roster-update
-          cat > roster-update/README.md << 'MD'
-          # 如何上傳更表資料
-
-          ## 方法：手動上傳 CSV
-
-          將更新後的更表轉換為 CSV 格式，上傳到此目錄。
-
-          ### CSV 格式
-          ```csv
-          staff_id,date,shift
-          RN001,2026-04-01,A5
-          RN001,2026-04-02,WO
-          RN008,2026-04-01,P5
-          ```
-
-          ### 欄位說明
-          - `staff_id`：員工 ID（如 RN001, APN001）
-          - `date`：日期，格式 YYYY-MM-DD
-          - `shift`：班次代碼（A5, P5, AN, N, D, WO, O, AL, SD...）
-
-          ### 班次代碼對照
-          | 代碼 | 意義 |
-          |------|------|
-          | A5 | 早班 07:00–15:00 |
-          | P5 | 中班 14:00–22:00 |
-          | AN | 上午+夜班 |
-          | N | 夜班 |
-          | D/D* | 主管更 |
-          | WO | 週假 |
-          | O/AL | 年假 |
-          | SD | 病假 |
-
-          ### 上傳步驟
-          1. 在 GitHub 上編輯 `roster-update/roster.csv`
-          2. 或在本地編輯後 commit
-          3. 觸發 `workflow_dispatch` 或等待定時提醒
-
-          ### GitHub 快速編輯
-          直接在 GitHub 點擊 `roster-update/roster.csv` → Edit 即可。
-          MD
-          echo "Upload instructions created"
-
-      - uses: actions/checkout@v4
-      - name: Commit upload folder
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add roster-update/
-          git diff --cached --quiet && echo "No changes" || git commit -m "docs: add roster upload instructions"
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update roster data $(date +%Y-%m-%d)"
+            git push
+          fi
 
   deploy:
-    needs: [update-csv, upload-reminder]
+    needs: process-roster
     runs-on: ubuntu-latest
     environment:
       name: github-pages
