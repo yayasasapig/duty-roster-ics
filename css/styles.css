@@ -1,3 +1,17 @@
 .tab-btn.active{background:#5BBCAD;color:#fff}.tab-btn:not(.active){background:#fafcfb;color:#6B7C86}
-    details[open] summary .summary-chevron{transform:rotate(180deg)}details summary .summary-chevron{transition:transform 0.2s}
-    @media print{.no-print{display:none!important}body{background:#fff;padding:0}.card-wrap{box-shadow:none;padding:12px 8px;border-radius:0}@page{size:landscape;margin:10mm}}
+details[open] summary .summary-chevron{transform:rotate(180deg)}details summary .summary-chevron{transition:transform 0.2s}
+
+/* ============================
+   Print layout enhancements
+   ============================ */
+@media print {
+  .no-print{display:none!important}
+  body{background:#fff;padding:0}
+  .card-wrap{box-shadow:none;padding:0;border-radius:0}
+  @page{size:landscape;margin:8mm}
+  body{font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-table{font-size:11px}
+  .print-table th,.print-table td{padding:5px 3px!important;font-size:11px}
+  .print-staff-name{font-weight:600}
+  .print-off{text-decoration:line-through;opacity:0.6}
+}
