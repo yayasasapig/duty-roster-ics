@@ -176,7 +176,22 @@ lucide.createIcons();
       groupOrder.forEach(function(gk){const ids=Object.keys(STAFF).filter(function(id){return id.startsWith(gk);}).sort();if(ids.length===0)return;html+='<tr><td colspan="9" style="background:'+groupColor[gk]+'!important;color:#fff;font-weight:700;font-size:12px;text-align:left;padding:6px 8px;border:1.5px solid #000;letter-spacing:0.03em;">'+groupNames[gk]+'</td></tr>';ids.forEach(function(id){html+='<tr><td class="staff-cell" style="text-align:left;font-size:11px;white-space:nowrap;padding:4px 6px;border:1px solid #333;"><span class="print-staff-name">'+STAFF[id]+'</span><br><span style="font-size:10px;color:#666;font-weight:400;">'+id+'</span></td>';days.forEach(function(day){const shift=rotaMap[id]&&rotaMap[id][day];if(shift){const off=isOffShift(shift);const codeClass=off?'print-off':getShiftCodeClass(shift);html+='<td style="text-align:center;vertical-align:middle;border:1px solid #333;padding:4px;"><span class="print-cell '+codeClass+'">'+shift+'</span></td>';}else{html+='<td style="background:#F5F5F5;text-align:center;vertical-align:middle;border:1px solid #333;padding:4px;"><span class="print-empty-cell"></span></td>';}});html+='<td class="notes-cell" style="background:#F9F9F9;border:1px solid #333;padding:4px;"></td></tr>';});html+='<tr><td colspan="9" style="border:none;height:6px;background:transparent;"></td></tr>';});
       html+='<tr class="print-footer-row"><td colspan="9" style="background:#F0F4F8;border-top:2px solid #000;font-size:11px;text-align:left;padding:8px 10px;"><div class="print-footer-check"><label>\u6aa2\u6c42\u4eba \u7b71\u8f49:</label><input type="checkbox" style="width:14px;height:14px;"/><label>\u6aa2\u6c42\u4eba \u7b71\u8f49:</label><input type="checkbox" style="width:14px;height:14px;"/><label>\u4ee3\u7406\u8ab2\u9577:</label><input type="checkbox" style="width:14px;height:14px;"/></div></td></tr>';
       html+='</tbody></table></div>';
-      html+='<div class="flex gap-2 mt-4 no-print"><button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate2 text-white text-sm font-semibold flex items-center gap-2 hover:bg-slate-700 transition-colors"><i data-lucide="printer" class="w-4 h-4" stroke-width="2"></i>\u6253\u5370</button></div>';
+      html+='<div class="flex gap-2 mt-4 no-print"><button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate2 text-white text-sm font-semibold flex items-center gap-2 hover:bg-slate-700 transition-colors"><i data-lucide="printer" class="w-4 h-4" stroke-width="2"></i>\u6253\u5370</button><button id="copyPrintBtn" onclick="copyPrintTable()" class="px-4 py-2 rounded-xl border border-border text-slate2 text-sm font-semibold flex items-center gap-2 hover:bg-bg transition-colors"><i data-lucide="clipboard" class="w-4 h-4" stroke-width="2"></i>\u8907\u88fd\u5230\u5265\u8cbc\u677f</button></div>';
+      window.copyPrintTable=function(){
+        var tbl=document.querySelector('.print-table');
+        if(!tbl){alert('\u7b49\u5f85\u5217\u8868\u52a0\u8f09\u5b8c\u6210');return;}
+        var txt=Array.from(tbl.querySelectorAll('tr')).map(function(row){
+          return Array.from(row.querySelectorAll('th,td')).map(function(cell){return cell.textContent.trim();}).join('\t');
+        }).join('\n');
+        navigator.clipboard.writeText(txt).then(function(){
+          var btn=document.getElementById('copyPrintBtn');
+          var orig=btn.innerHTML;
+          btn.innerHTML='<i data-lucide="check" class="w-4 h-4" stroke-width="2"></i>\u5df2\u8907\u88fd\uff01';
+          btn.classList.add('bg-green-50','text-green-600','border-green-200');
+          lucide.createIcons();
+          setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('bg-green-50','text-green-600','border-green-200');lucide.createIcons();},2000);
+        }).catch(function(){alert('\u8907\u88fd\u593e\u593e\u5931\u6557\uff0c\u8acb\u624b\u52d5\u8907\u88fd');});
+      };
       document.getElementById('printContent').innerHTML=html;
       document.getElementById('printWeekStart').value=weekStart;
     }
