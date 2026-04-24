@@ -70,7 +70,7 @@ lucide.createIcons();
       var data=getPreviewData(staffSelect.value,startDate.value,endDate.value);
       var area=document.getElementById('previewArea');
       var content=document.getElementById('previewContent');
-      if(data.length===0){area.classList.remove('hidden');content.innerHTML='<div class="text-center py-8 text-slate3 text-sm">在指定日期範圍內找不到任何更期記錄</div>';return;}
+      if(data.length===0){area.classList.remove('hidden');content.innerHTML='<div class="text-center py-8 text-slate3 text-sm">在指定日期範圍內找不到任何更期記錄<br><span class="text-xs text-slate-400 mt-1 block">請選擇 2026年3月 至 2026年5月 期間的日期範圍</span></div>';return;}
       var ics=generateICS(staffSelect.value,startDate.value,endDate.value);
       var wkday=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       var tableHtml='<div class="mb-4"><div class="flex items-center gap-2 mb-3"><button id="icsViewToggle" class="px-3 py-1.5 rounded-lg bg-mint/10 text-mint text-xs font-bold hover:bg-mint/20 transition-colors flex items-center gap-1.5"><i data-lucide="code" class="w-3.5 h-3.5" stroke-width="2"></i>檢視原始 ICS</button><span class="text-xs text-slate-400">顯示更期摘要表格</span></div><div id="icsRawBlock" class="hidden mb-4"><pre class="bg-slate-800 text-green-400 text-xs p-4 rounded-xl overflow-x-auto max-h-80 font-mono leading-relaxed">'+ics.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></div></div>';
@@ -127,7 +127,7 @@ lucide.createIcons();
       for(var i=0;i<staffKeys2.length;i++){var sid=staffKeys2[i];if(sid.startsWith('WM'))groups[0].ids.push(sid);else if(sid.startsWith('APN'))groups[1].ids.push(sid);else if(sid.startsWith('RN'))groups[2].ids.push(sid);else if(sid.startsWith('EN'))groups[3].ids.push(sid);else groups[4].ids.push(sid);}
       let totalWork=0,totalOff=0;const rotaVals=Object.values(rotaMap);
       if (rotaVals.length === 0) {
-        document.getElementById('wardContent').innerHTML='<div class="text-center py-12 text-slate3"><div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-400" stroke-width="1.5"></i></div><p class="text-base font-medium text-slate2 mb-1">此日期暫無更表資料</p><p class="text-sm text-slate3">請嘗試選擇另一日期，例如今日或其他工作日</p></div>';
+        var dataRangeHint='資料覆盖 2026年3月 至 2026年5月，請選擇該範圍內的工作日';document.getElementById('wardContent').innerHTML='<div class="text-center py-12 text-slate3"><div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-400" stroke-width="1.5"></i></div><p class="text-base font-medium text-slate2 mb-1">此日期暫無更表資料</p><p class="text-sm text-slate-400">'+dataRangeHint+'</p><button onclick="document.getElementById(\'wardTodayBtn\').click()" class="mt-4 px-4 py-2 rounded-xl bg-mint/10 text-mint text-sm font-bold hover:bg-mint/20 transition-colors">跳到今日</button></div>';
         document.getElementById('wardStats').innerHTML='';
         lucide.createIcons();
         return;
