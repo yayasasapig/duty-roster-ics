@@ -226,17 +226,24 @@
       var data=getPreviewData(staffSelect.value,startDate.value,endDate.value);
       var area=document.getElementById('previewArea');
       var content=document.getElementById('previewContent');
-      if(data.length===0){area.classList.remove('hidden');content.innerHTML='<div class="text-center py-8 text-slate3 text-sm">\u5728\u6307\u5b9a\u65e5\u671f\u7bc4\u570f\u5167\u627e\u4e0d\u5230\u4efb\u4f55\u66f4\u671f\u8a18\u9304</div>';return;}
+      if(data.length===0){area.classList.remove('hidden');content.innerHTML='<div class="text-center py-8 text-slate3 text-sm">在指定日期範圍內找不到任何更期記錄</div>';return;}
+      var ics=generateICS(staffSelect.value,startDate.value,endDate.value);
       var wkday=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      var html='<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-bg"><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">\u65e5\u671f</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">\u661f\u671f</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">\u73ed\u6b21</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">\u6642\u9593</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">\u8aaa\u660e</th></tr></thead><tbody>';
+      var tableHtml='<div class="mb-4"><div class="flex items-center gap-2 mb-3"><button id="icsViewToggle" class="px-3 py-1.5 rounded-lg bg-mint/10 text-mint text-xs font-bold hover:bg-mint/20 transition-colors flex items-center gap-1.5"><i data-lucide="code" class="w-3.5 h-3.5" stroke-width="2"></i>檢視原始 ICS</button><span class="text-xs text-slate-400">顯示更期摘要表格</span></div><div id="icsRawBlock" class="hidden mb-4"><pre class="bg-slate-800 text-green-400 text-xs p-4 rounded-xl overflow-x-auto max-h-80 font-mono leading-relaxed">'+ics.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></div></div>';
+      tableHtml+='<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-bg"><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">日期</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">星期</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">班次</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">時間</th><th class="text-left px-3 py-2 text-xs font-bold text-slate3 uppercase tracking-wider border-b border-border">說明</th></tr></thead><tbody>';
       for(var i=0;i<data.length;i++){
         var row=data[i];var parts=row.date.split('-');var y=parseInt(parts[0]),mo=parseInt(parts[1]),d=parseInt(parts[2]);
         var dt=new Date(y,mo-1,d);var w=wkday[dt.getDay()];
         var dayStr=(mo<10?'0':'')+mo+'/'+(d<10?'0':'')+d;
         var off=isOffShift(row.shift);var codeClass=off?'bg-slate-400':getShiftCodeClass(row.shift);
-        html+='<tr class="'+(off?'text-slate-400':'hover:bg-bg/50')+' border-b border-border/50 transition-colors"><td class="px-3 py-2 font-mono text-xs">'+dayStr+'</td><td class="px-3 py-2 text-xs">'+w+'</td><td class="px-3 py-2"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold text-white '+codeClass+'">'+row.shift+'</span></td><td class="px-3 py-2 text-xs text-slate3 font-mono">'+shiftTimeDesc(row.shift)+'</td><td class="px-3 py-2 text-xs text-slate3">'+(off?'\u653e\u5047':'')+'</td></tr>';
+        tableHtml+='<tr class="'+(off?'text-slate-400':'hover:bg-bg/50')+' border-b border-border/50 transition-colors"><td class="px-3 py-2 font-mono text-xs">'+dayStr+'</td><td class="px-3 py-2 text-xs">'+w+'</td><td class="px-3 py-2"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold text-white '+codeClass+'">'+row.shift+'</span></td><td class="px-3 py-2 text-xs text-slate3 font-mono">'+shiftTimeDesc(row.shift)+'</td><td class="px-3 py-2 text-xs text-slate3">'+(off?'放假':'')+'</td></tr>';
       }
-      html+='</tbody></table></div>';area.classList.remove('hidden');content.innerHTML=html;
+      tableHtml+='</tbody></table></div>';area.classList.remove('hidden');content.innerHTML=tableHtml;lucide.createIcons();
+      document.getElementById('icsViewToggle').addEventListener('click',function(){
+        var blk=document.getElementById('icsRawBlock');blk.classList.toggle('hidden');
+        this.innerHTML=blk.classList.contains('hidden')?'<i data-lucide="code" class="w-3.5 h-3.5" stroke-width="2"></i>檢視原始 ICS':'<i data-lucide="table" class="w-3.5 h-3.5" stroke-width="2"></i>返回摘要表格';
+        lucide.createIcons();
+      });
     });
     downloadBtn.addEventListener('click',function(){
       msgBox.className='hidden';
