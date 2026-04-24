@@ -1,0 +1,52 @@
+name: Fetch Latest Roster Data
+
+on:
+  schedule:
+    # Run every day at 06:00 UTC (14:00 HKT) to fetch latest roster data
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      data_url:
+        description: 'URL to fetch data.js from (raw URL to Google Sheet export or raw GitHub)'
+        required: true
+        default: ''
+      commit_message:
+        description: 'Commit message'
+        required: false
+        default: 'chore: auto-update roster data'
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch latest data.js
+        run: |
+          if [ -z "${{ inputs.data_url }}" ]; then
+            echo "No data_url provided, skipping fetch"
+            exit 0
+          fi
+          
+          echo "Fetching data from: ${{ inputs.data_url }}"
+          # Fetch the data
+          curl -sL "${{ inputs.data_url }}" -o new_data.js
+          
+          if [ ! -f new_data.js ]; then
+            echo "Failed to fetch data"
+            exit 1
+          fi
+          
+          # Check if content changed
+          if [ -f data.js ] && cmp -s new_data.js data.js; then
+            echo "Data unchanged, no update needed"
+          else
+            echo "Data changed, committing update"
+            mv new_data.js data.js
+            git config user.name "GitHub Actions Bot"
+            git config user.email "actions@github.com"
+            git add data.js
+            git commit -m "${{ inputs.commit_message }}"
+            git push
+          fi

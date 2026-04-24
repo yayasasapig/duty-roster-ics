@@ -244,7 +244,24 @@ lucide.createIcons();
   // PWA: register service worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        // Periodically check for data updates
+        setInterval(function(){reg.active&&reg.active.postMessage('CHECK_FOR_UPDATE');},6*60*60*1000);
+      }).catch(() => {});
+    });
+  }
+
+  // Handle data update notifications from service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', function(event){
+      if(event.data&&event.data.type==='DATA_UPDATE_AVAILABLE'){
+        var banner=document.createElement('div');
+        banner.className='fixed top-4 right-4 bg-mint text-white px-4 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 text-sm font-semibold max-w-xs';
+        banner.innerHTML='<i data-lucide="refresh-cw" class="w-4 h-4 shrink-0"></i><span>'+event.data.message+'</span><button onclick="location.reload()" class="ml-2 px-2 py-1 bg-white/20 rounded-lg text-xs hover:bg-white/30 transition-colors">重整</button>';
+        document.body.appendChild(banner);
+        lucide.createIcons();
+        setTimeout(function(){banner.remove();},15000);
+      }
     });
   }
 

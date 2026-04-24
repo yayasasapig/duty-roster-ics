@@ -1,7 +1,9 @@
-const CACHE_NAME = 'a5-roster-v1';
+const CACHE_NAME = 'a5-roster-v2';
 const ASSETS = [
   './',
   './index.html',
+  './js/app.js',
+  './css/styles.css',
   './data.js',
   './manifest.json',
   'https://cdn.tailwindcss.com',
@@ -19,14 +21,55 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate: clean old caches
+// Activate: clean old caches + check for data.js update
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    ).then(() => {
+      // After activating, check for data.js update in background
+      checkDataUpdate();
+      return self.clients.claim();
+    })
   );
-  self.clients.claim();
+});
+
+// Background check for data.js update (called on activate and periodically)
+async function checkDataUpdate() {
+  try {
+    const networkData = await fetch('./data.js?t=' + Date.now()).then(r => r.text()).catch(() => null);
+    if (!networkData) return;
+
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match('./data.js');
+    const cachedData = cachedResponse ? await cachedResponse.text() : '';
+
+    if (networkData !== cachedData) {
+      // New data available - store it in cache and notify clients
+      const response = new Response(networkData, {
+        headers: { 'Content-Type': 'application/javascript' }
+      });
+      await cache.put('./data.js', response);
+
+      // Notify all clients that new data is available
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'DATA_UPDATE_AVAILABLE',
+          message: '更表資料已更新，請重新整理以獲取最新版本'
+        });
+      });
+    }
+  } catch (e) {
+    // Silently fail - no network or other error
+  }
+}
+
+// Periodically check for updates (every 6 hours while active)
+self.addEventListener('message', (event) => {
+  if (event.data === 'CHECK_FOR_UPDATE') {
+    checkDataUpdate();
+  }
 });
 
 // Fetch: network-first for API/CDN, cache-first for local files
