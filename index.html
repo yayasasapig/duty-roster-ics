@@ -15,28 +15,21 @@
   <style>
     .tab-btn.active{background:#5BBCAD;color:#fff}.tab-btn:not(.active){background:#fafcfb;color:#6B7C86}
     details[open] summary .summary-chevron{transform:rotate(180deg)}details summary .summary-chevron{transition:transform 0.2s}
-    @media print{
+@media print{
   .no-print{display:none!important}
-  body{background:#fff;padding:0;margin:0}
+  header{display:none!important}
+  .print-legend{display:none!important}
+  .print-footer-row{display:none!important}
+  body{background:#fff;margin:0;padding:0}
   .card-wrap{box-shadow:none;padding:0;border-radius:0;max-width:100%}
-  header{display:none}
-  @page{size:A4 landscape;margin:8mm}
-  /* 縮放所有內容塞進一頁 */
-  #printContent{zoom:0.75;transform-origin:top left}
-  /* 極細字體 */
-  table{font-size:9px}
-  td,th{padding:2px!important;line-height:1.2}
-  .print-staff-name{font-size:10px;font-weight:700}
-  .print-cell{font-size:9px;font-weight:600}
-  .staff-cell{font-size:9px}
-  /* 移除所有分頁 */
-  tr{page-break-inside:avoid;break-inside:avoid}
-  tbody{page-break-inside:avoid}
-  /* 縮小legend */
-  .print-legend{margin-bottom:6px!important;padding:6px 8px!important;font-size:10px}
-  .print-legend div{font-size:12px!important}
-  /* 底部審批列印區 */
-  .print-footer-row{font-size:10px}
+  @page{size:A4 landscape;margin:5mm}
+  *{font-size:8px;line-height:1.1}
+  table{font-size:8px;border-collapse:collapse}
+  td,th{padding:1px 2px!important;border:1px solid #333}
+  .staff-cell,.print-staff-name,.print-cell{font-size:7px;font-weight:600}
+  th{font-size:7px;font-weight:700;background:#D0DCE8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tr,thead,tbody{page-break-inside:avoid!important;break-inside:avoid!important}
+  #printContent,.overflow-x-auto{max-width:100%;overflow:visible!important}
 }
   </style>
 </head>
