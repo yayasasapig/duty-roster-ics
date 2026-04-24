@@ -17,20 +17,26 @@
     details[open] summary .summary-chevron{transform:rotate(180deg)}details summary .summary-chevron{transition:transform 0.2s}
     @media print{
   .no-print{display:none!important}
-  body{background:#fff;padding:0;font-size:13px}
-  .card-wrap{box-shadow:none;padding:8px;border-radius:0}
-  @page{size:landscape;margin:12mm}
-  /* 可讀性 A: 字體、行距、邊框 */
-  .ward-row td{padding:6px 4px;line-height:1.5}
-  .ward-name{font-weight:700;font-size:14px}
-  .badge{background:#fff!important;border:2px solid #333!important;color:#000!important;padding:2px 6px;font-size:12px;font-weight:600;box-shadow:none}
-  /* 可讀性 B: 深色邊框取代淺色背景 */
-  table,td,th{border:1.5px solid #333!important}
-  /* 分頁優化 B: 避免在行中間分頁 */
-  .ward-row{break-inside:avoid;page-break-inside:avoid}
-  thead{display:table-header-group}
-  /* 每頁頂部標題 */
-  .print-header{display:block!important;font-size:16px;font-weight:700;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid #333}
+  body{background:#fff;padding:0;margin:0}
+  .card-wrap{box-shadow:none;padding:0;border-radius:0;max-width:100%}
+  header{display:none}
+  @page{size:A4 landscape;margin:8mm}
+  /* 縮放所有內容塞進一頁 */
+  #printContent{zoom:0.75;transform-origin:top left}
+  /* 極細字體 */
+  table{font-size:9px}
+  td,th{padding:2px!important;line-height:1.2}
+  .print-staff-name{font-size:10px;font-weight:700}
+  .print-cell{font-size:9px;font-weight:600}
+  .staff-cell{font-size:9px}
+  /* 移除所有分頁 */
+  tr{page-break-inside:avoid;break-inside:avoid}
+  tbody{page-break-inside:avoid}
+  /* 縮小legend */
+  .print-legend{margin-bottom:6px!important;padding:6px 8px!important;font-size:10px}
+  .print-legend div{font-size:12px!important}
+  /* 底部審批列印區 */
+  .print-footer-row{font-size:10px}
 }
   </style>
 </head>
