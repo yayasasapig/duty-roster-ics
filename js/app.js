@@ -147,7 +147,10 @@ lucide.createIcons();
       var q=wardSearchQuery.trim().toLowerCase();
       document.querySelectorAll('.ward-row').forEach(function(row){
         var searchAttr=row.getAttribute('data-search')||'';
-        row.classList.toggle('hidden',q!==''&&!searchAttr.includes(q));
+        var shiftAttr=row.getAttribute('data-shift')||'';
+        var matchName=searchAttr.includes(q);
+        var matchShift=q!==''&&(shiftAttr.includes(q.toUpperCase())||shiftAttr.toLowerCase().includes(q));
+        row.classList.toggle('hidden',q!==''&&!matchName&&!matchShift);
       });
     }
     document.getElementById('wardPrevBtn').addEventListener('click',function(){var p=new Date(currentWardDate);p.setDate(p.getDate()-1);if(p>=MIN_DATE){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}});
@@ -183,6 +186,16 @@ lucide.createIcons();
     document.getElementById('wardSearch').addEventListener('input',function(){
       wardSearchQuery=this.value;
       applyWardSearch();
+    });
+
+    // #15: Quick date navigation - next week, prev week
+    document.getElementById('wardNextWeekBtn')&&document.getElementById('wardNextWeekBtn').addEventListener('click',function(){
+      var p=new Date(currentWardDate);p.setDate(p.getDate()+7);
+      if(p<=new Date(MAX_DATE)){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}
+    });
+    document.getElementById('wardPrevWeekBtn')&&document.getElementById('wardPrevWeekBtn').addEventListener('click',function(){
+      var p=new Date(currentWardDate);p.setDate(p.getDate()-7);
+      if(p>=new Date(MIN_DATE)){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}
     });
     document.getElementById('wardTodayBtn').addEventListener('click',function(){
       var today=new Date();

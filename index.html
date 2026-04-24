@@ -112,11 +112,13 @@
           <button id="wardTodayBtn" class="px-3 py-2 rounded-xl border border-mint bg-mint/5 text-mint hover:bg-mint/10 transition-all duration-200 flex items-center gap-1.5 text-xs font-bold" title="跳到今日">
             <i data-lucide="calendar-check" class="w-4 h-4" stroke-width="2"></i>今日
           </button>
+          <button id="wardPrevWeekBtn" class="px-3 py-2 rounded-xl border border-border hover:bg-bg transition-all duration-200 text-xs font-bold text-slate3" title="上一週">◀ 週</button>
+          <button id="wardNextWeekBtn" class="px-3 py-2 rounded-xl border border-border hover:bg-bg transition-all duration-200 text-xs font-bold text-slate3" title="下一週">週 ▶</button>
         </div>
         <div class="flex items-center gap-3 mb-4">
           <div class="relative flex-1">
             <i data-lucide="search" class="w-4 h-4 text-slate3 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" stroke-width="1.5"></i>
-            <input type="text" id="wardSearch" placeholder="搜尋護士姓名..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-bg text-slate2 text-sm focus:outline-none focus:ring-2 focus:ring-mint/30 transition-all duration-200 placeholder:text-slate3" />
+            <input type="text" id="wardSearch" placeholder="搜護士名稱 / 班次（A5, AN, P5）..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-bg text-slate2 text-sm focus:outline-none focus:ring-2 focus:ring-mint/30 transition-all duration-200 placeholder:text-slate3" />
           </div>
         </div>
         <div class="flex items-center gap-2 mb-4 flex-wrap no-print">
