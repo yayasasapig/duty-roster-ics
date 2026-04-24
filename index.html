@@ -31,15 +31,7 @@
           <p class="text-lg font-bold text-slate2">Department of Medicine, Unit <span class="text-mint">A5</span></p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="prevMonth" class="p-2 rounded-xl hover:bg-bg transition-all duration-200 hover:-translate-y-[1px]">
-          <i data-lucide="chevron-left" class="w-5 h-5 text-slate3" stroke-width="1.5"></i>
-        </button>
-        <span id="currentMonthLabel" class="text-base font-semibold text-slate2 min-w-[120px] text-center"></span>
-        <button id="nextMonth" class="p-2 rounded-xl hover:bg-bg transition-all duration-200 hover:-translate-y-[1px]">
-          <i data-lucide="chevron-right" class="w-5 h-5 text-slate3" stroke-width="1.5"></i>
-        </button>
-      </div>
+
     </div>
   </header>
 
@@ -154,31 +146,6 @@
   <meta name="theme-color" content="#5BBCAD">
   <script>
     lucide.createIcons();
-    const currentDate=new Date();
-    function updateMonthLabel(){document.getElementById('currentMonthLabel').textContent=currentDate.getFullYear()+'\u5e74'+(currentDate.getMonth()+1)+'\u6708';}
-    updateMonthLabel();
-    document.getElementById('prevMonth').addEventListener('click',function(){
-      var p=new Date(currentWardDate);p.setMonth(p.getMonth()-1);
-      var parts=currentWardDate.split('-');var day=parseInt(parts[2]);
-      var lastDay=new Date(p.getFullYear(),p.getMonth()+1,0).getDate();
-      if(p.getDate()>lastDay)p.setDate(lastDay);
-      if(p>=new Date(MIN_DATE)&&p<=new Date(MAX_DATE)){
-        currentWardDate=p.toISOString().split('T')[0];
-        if(document.getElementById('tabWard').classList.contains('active'))renderWardView();
-      }
-      currentDate.setMonth(currentDate.getMonth()-1);updateMonthLabel();
-    });
-    document.getElementById('nextMonth').addEventListener('click',function(){
-      var p=new Date(currentWardDate);p.setMonth(p.getMonth()+1);
-      var parts=currentWardDate.split('-');var day=parseInt(parts[2]);
-      var lastDay=new Date(p.getFullYear(),p.getMonth()+1,0).getDate();
-      if(p.getDate()>lastDay)p.setDate(lastDay);
-      if(p>=new Date(MIN_DATE)&&p<=new Date(MAX_DATE)){
-        currentWardDate=p.toISOString().split('T')[0];
-        if(document.getElementById('tabWard').classList.contains('active'))renderWardView();
-      }
-      currentDate.setMonth(currentDate.getMonth()+1);updateMonthLabel();
-    });
     const tabs=document.querySelectorAll('.tab-btn');
     const panels=document.querySelectorAll('.tab-panel');
     tabs.forEach(function(tab){tab.addEventListener('click',function(){
