@@ -8,6 +8,7 @@ lucide.createIcons();
       if(p.getDate()>lastDay)p.setDate(lastDay);
       if(p>=new Date(MIN_DATE)&&p<=new Date(MAX_DATE)){
         currentWardDate=p.toISOString().split('T')[0];
+        localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);
         updateMonthLabel();
         if(document.getElementById('tabWard').classList.contains('active'))renderWardView();
       }
@@ -19,6 +20,7 @@ lucide.createIcons();
       if(p.getDate()>lastDay)p.setDate(lastDay);
       if(p>=new Date(MIN_DATE)&&p<=new Date(MAX_DATE)){
         currentWardDate=p.toISOString().split('T')[0];
+        localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);
         updateMonthLabel();
         if(document.getElementById('tabWard').classList.contains('active'))renderWardView();
       }
@@ -104,7 +106,10 @@ lucide.createIcons();
       msgBox.className='mb-4 px-4 py-3 rounded-xl text-sm flex items-center gap-2 '+(workCount>0?'bg-green-50 text-green-700':'bg-amber-50 text-amber-700');
       lucide.createIcons();
     });
-    const MIN_DATE='2026-03-01';const MAX_DATE='2026-05-31';let currentWardDate=MIN_DATE;let wardSearchQuery='';
+    const MIN_DATE='2026-03-01';const MAX_DATE='2026-05-31';let currentWardDate=(function(){
+      var saved=localStorage.getItem('dutyRoster_lastWardDate');
+      return(saved&&saved>=MIN_DATE&&saved<=MAX_DATE)?saved:MIN_DATE;
+    })();let wardSearchQuery='';
     function applyShiftFilters(){
       var rows=document.querySelectorAll('.ward-row[data-shift]');
       rows.forEach(function(row){
@@ -153,9 +158,9 @@ lucide.createIcons();
         row.classList.toggle('hidden',q!==''&&!matchName&&!matchShift);
       });
     }
-    document.getElementById('wardPrevBtn').addEventListener('click',function(){var p=new Date(currentWardDate);p.setDate(p.getDate()-1);if(p>=MIN_DATE){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}});
-    document.getElementById('wardNextBtn').addEventListener('click',function(){var p=new Date(currentWardDate);p.setDate(p.getDate()+1);if(p<=MAX_DATE){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}});
-    document.getElementById('wardDate').addEventListener('change',function(){var v=this.value;if(v>=MIN_DATE&&v<=MAX_DATE){currentWardDate=v;updateHash();renderWardView();}});
+    document.getElementById('wardPrevBtn').addEventListener('click',function(){var p=new Date(currentWardDate);p.setDate(p.getDate()-1);if(p>=MIN_DATE){currentWardDate=p.toISOString().split('T')[0];localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateHash();renderWardView();}});
+    document.getElementById('wardNextBtn').addEventListener('click',function(){var p=new Date(currentWardDate);p.setDate(p.getDate()+1);if(p<=MAX_DATE){currentWardDate=p.toISOString().split('T')[0];localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateHash();renderWardView();}});
+    document.getElementById('wardDate').addEventListener('change',function(){var v=this.value;if(v>=MIN_DATE&&v<=MAX_DATE){currentWardDate=v;localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateHash();renderWardView();}});
     function renderPrintView(){
       var weekStart=document.getElementById('printWeekStart').value||'2026-03-02';
       var days=[];for(var i=0;i<7;i++){var d2=new Date(weekStart);d2.setDate(d2.getDate()+i);days.push(d2.toISOString().split('T')[0]);}
@@ -206,11 +211,11 @@ lucide.createIcons();
     // #15: Quick date navigation - next week, prev week
     document.getElementById('wardNextWeekBtn')&&document.getElementById('wardNextWeekBtn').addEventListener('click',function(){
       var p=new Date(currentWardDate);p.setDate(p.getDate()+7);
-      if(p<=new Date(MAX_DATE)){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}
+      if(p<=new Date(MAX_DATE)){currentWardDate=p.toISOString().split('T')[0];localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateHash();renderWardView();}
     });
     document.getElementById('wardPrevWeekBtn')&&document.getElementById('wardPrevWeekBtn').addEventListener('click',function(){
       var p=new Date(currentWardDate);p.setDate(p.getDate()-7);
-      if(p>=new Date(MIN_DATE)){currentWardDate=p.toISOString().split('T')[0];updateHash();renderWardView();}
+      if(p>=new Date(MIN_DATE)){currentWardDate=p.toISOString().split('T')[0];localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateHash();renderWardView();}
     });
     document.getElementById('wardTodayBtn').addEventListener('click',function(){
       var today=new Date();
@@ -218,6 +223,7 @@ lucide.createIcons();
       var todayStr=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
       if(todayStr>=MIN_DATE&&todayStr<=MAX_DATE){
         currentWardDate=todayStr;
+        localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);
         updateHash();renderWardView();
       }
     });
@@ -231,7 +237,7 @@ lucide.createIcons();
   function updateHash(){history.replaceState(null,'',location.pathname+'#date='+currentWardDate);}
   function readHash(){
     var m=location.hash.match(/date=(\d{4}-\d{2}-\d{2})/);
-    if(m&&m[1]>=MIN_DATE&&m[1]<=MAX_DATE){currentWardDate=m[1];updateMonthLabel();renderWardView();}
+    if(m&&m[1]>=MIN_DATE&&m[1]<=MAX_DATE){currentWardDate=m[1];localStorage.setItem('dutyRoster_lastWardDate',currentWardDate);updateMonthLabel();renderWardView();}
   }
   readHash();
 
